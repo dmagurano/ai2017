@@ -69,12 +69,12 @@
 					<div class="panel-body">
 						<form role="form" id="addCart" name="addCart" action="/Lab1/cart"
 							method="POST">
-							<% for (TicketType type: TicketType.values()){
-			    						String ticketName = type.toString().replace("_", " ") ;
+							<% for (TicketType type: TicketType.values()) {
+			    						String ticketName = type.toString();
 			    					 %>
 			    			<div class="row">		 
 								<div class="form-inline">
-									<label class="control-label col-sm-2" for="<%= ticketName %>"> <%= ticketName %>
+									<label class="control-label col-sm-2" for="<%= ticketName %>"> <%= ticketName.replace("_"," ")  %>
 									</label> 
 									<input type="number" name="<%= ticketName %>"
 										id="<%= ticketName %>" class="quantity form-control input-sm" min="0"

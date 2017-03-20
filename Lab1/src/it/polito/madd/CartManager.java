@@ -15,7 +15,7 @@ public class CartManager implements CartService {
 			throw new Exception("The quantity is negative or 0");
 		Integer current = tickets.get(ticket);
 		if (current == null)
-			current = 0;
+			current = new Integer(0);
 		tickets.put(ticket, current + quantity);
 	}
 
@@ -23,6 +23,8 @@ public class CartManager implements CartService {
 	public void remove(Ticket ticket, int quantity) throws Exception {
 		if (quantity <= 0)
 			throw new Exception("The quantity is negative or 0");
+		if (tickets.isEmpty())
+			throw new Exception("The cart is empty");
 		Integer current = tickets.get(ticket);
 		if (current == null)
 			throw new Exception("The item is not in the cart");

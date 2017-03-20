@@ -25,7 +25,7 @@ public class CartServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		
 		HttpSession session = request.getSession();
 		
@@ -45,12 +45,25 @@ public class CartServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
-		int op = 0;
+		int op = -1; // op == 1 -> modify, op == 0 -> add
+		
+		if (request.getParameter("METHOD").equals("add"))
+			op = 0; 
 		if (request.getParameter("METHOD").equals("modify"))
 			op = 1;
-
+		if (op == -1)
+		{
+			// the request is not well formed, return 400
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
 		// fill up the request with the params passed
 		CartManager cm = (CartManager) session.getAttribute("CartService");
+		if (cm == null)
+		{
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return;
+		}
 		int value = 0;
 		synchronized (session)
 		{
@@ -61,14 +74,15 @@ public class CartServlet extends HttpServlet {
 				{
 					try {
 						value = Integer.parseInt(request.getParameter(type.toString()));
-						if (value == 0)
+						if (value == 0 && op == 0)
 							continue;
 					}
 					catch (NumberFormatException e)
 					{
 						// TODO wrong param value passed
-						e.printStackTrace();
-						continue;
+						// the request is not well formed, return 400
+						response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+						return;
 					}
 					try {
 						// discriminate the requested operation
@@ -78,7 +92,9 @@ public class CartServlet extends HttpServlet {
 							cm.add(new Ticket(type), value);
 					} catch (Exception e) {
 						// TODO a value is invalid
-						e.printStackTrace();
+						// TODO skip it, but needs check
+						continue;
+						//e.printStackTrace();
 					}
 				}
 			}

@@ -12,15 +12,25 @@ import javax.servlet.http.HttpSession;
 import it.polito.madd.model.CreditCard;
 
 //TODO map the correct url
-@WebServlet("/pay")
+@WebServlet("/checkout")
 public class PaymentServlet extends HttpServlet {
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+			
+			HttpSession session = request.getSession();
+			// simply forward the request to the jsp page
+			// TODO setup the correct jsp page
+			try {
+				session.getServletContext().getRequestDispatcher("/checkout.jsp").forward(request, response);
+			} catch (ServletException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
 	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response){
 		HttpSession session = request.getSession();
-		
-		PaymentManager pm = (PaymentManager) session.getAttribute("PaymentManager");
-		CartManager cm = (CartManager) session.getAttribute("CartManager");
 		
 		String number, holder, cvv;
 		number = request.getParameter("number");
@@ -28,17 +38,30 @@ public class PaymentServlet extends HttpServlet {
 		cvv = request.getParameter("cvv");
 		if (number == null || holder == null || cvv == null)
 		{
-			int i;
-			// TODO check for null/invalid value and raise exception
-		}		
+			// the request is not well formed, return 400
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+			// TODO check also for invalid value and raise exception
+		}	
+		
+		PaymentManager pm = (PaymentManager) session.getAttribute("PaymentService");
+		CartManager cm = (CartManager) session.getAttribute("CartService");
+		if (cm == null || pm == null)
+		{
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return;
+		}
+		
 		synchronized (session)
 		{
 			// check if the user has the funds (and add the cc to wallet)
 			if (!pm.addCardAndCheckDisponibility(new CreditCard(number, holder, cvv), cm.getTotal()))
-			{
-				// TODO error
-				int i;
-			}
+				// card rejected
+				request.setAttribute("TRANSACTION_RESULT", "rejected");
+			else
+				// card accepted
+				request.setAttribute("TRANSACTION_RESULT", "accepted");
+			
 		}
 		
 		// send the request to the jsp page

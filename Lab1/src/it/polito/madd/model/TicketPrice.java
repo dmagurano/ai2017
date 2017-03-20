@@ -13,6 +13,7 @@ public class TicketPrice {
 			prices.put(type, p);
 			p *= 2;
 		}
+	    TicketPrice.initialized = true;
 	}
 	
 	public static float getPrice(TicketType type)

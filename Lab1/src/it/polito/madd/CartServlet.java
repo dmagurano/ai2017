@@ -50,7 +50,7 @@ public class CartServlet extends HttpServlet {
 			op = 1;
 
 		// fill up the request with the params passed
-		CartManager cm = (CartManager) session.getAttribute("CartManager");
+		CartManager cm = (CartManager) session.getAttribute("CartService");
 		int value = 0;
 		synchronized (session)
 		{

@@ -19,7 +19,8 @@ body{
 .butSub{
 
    width: 200px;
-   margin-left: 300px;
+   margin-left: auto;
+   margin-right: auto;
    margin-top: 10px;
 }
 .selMc{

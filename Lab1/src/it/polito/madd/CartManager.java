@@ -7,11 +7,11 @@ import it.polito.madd.model.Ticket;
 
 public class CartManager implements CartService {
 
-	private HashMap<Ticket, Integer> tickets;
+	private HashMap<Ticket, Integer> tickets = new HashMap<Ticket, Integer>();
 	
 	@Override
 	public void add(Ticket ticket, int quantity) throws Exception {
-		if (quantity <= 0)
+		if (quantity < 0)
 			throw new Exception("The quantity is negative or 0");
 		Integer current = tickets.get(ticket);
 		if (current == null)

@@ -61,6 +61,8 @@ public class CartServlet extends HttpServlet {
 				{
 					try {
 						value = Integer.parseInt(request.getParameter(type.toString()));
+						if (value == 0)
+							continue;
 					}
 					catch (NumberFormatException e)
 					{

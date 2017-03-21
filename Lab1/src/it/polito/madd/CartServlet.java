@@ -87,7 +87,7 @@ public class CartServlet extends HttpServlet {
 					try {
 						// discriminate the requested operation
 						if (op == 1)
-							cm.modify(new Ticket(type), value);
+							cm.modify(type, value);
 						else
 							cm.add(new Ticket(type), value);
 					} catch (Exception e) {

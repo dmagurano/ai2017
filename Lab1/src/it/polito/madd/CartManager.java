@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.polito.madd.model.Ticket;
+import it.polito.madd.model.TicketType;
 
 public class CartManager implements CartService {
 
@@ -51,7 +52,12 @@ public class CartManager implements CartService {
 	}
 
 	@Override
-	public void modify(Ticket ticket, int quantity) throws Exception {
+	public void modify(TicketType type, int quantity) throws Exception {
+		Ticket ticket = null;
+		for(Map.Entry<Ticket, Integer> m : tickets.entrySet()){
+			if(m.getKey().getType().equals(type))
+				ticket = m.getKey();
+		}
 		if (quantity < 0)
 			throw new Exception("The quantity is negative");
 		if (!tickets.containsKey(ticket))

@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
 		else
 			session.removeAttribute("username");
 		
-		request.getRequestDispatcher("/test_home.jsp").forward(request, response);
+		request.getRequestDispatcher("/cart.jsp").forward(request, response);
 	}
 
 }

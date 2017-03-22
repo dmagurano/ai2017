@@ -80,7 +80,7 @@
 	                            <span class="glyphicon glyphicon-shopping-cart"></span> Update your cart
 	                        </button></td>
 	                        <td>
-	                        <a href="/Lab1/checkout"><button type="button" class="btn btn-success">
+	                        <a href="/Lab1/private/checkout"><button type="button" class="btn btn-success">
 	                            Checkout <span class="glyphicon glyphicon-play"></span>
 	                        </button></a></td>
 	                    </tr>

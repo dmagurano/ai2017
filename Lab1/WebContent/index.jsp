@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="it.polito.madd.model.Ticket,java.util.ArrayList"%>
+	import="it.polito.madd.model.Ticket,java.util.ArrayList,it.polito.madd.LoginManager"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +18,7 @@
 <body>
 	<% HttpSession s = request.getSession(); %>
 	<div class="container">
-		<%@include file="navbar.jsp"%>
+		<%@include file="navbar.jsp"  %>
 	</div>
 	<div class="container">
 		<div class="row centered-form">

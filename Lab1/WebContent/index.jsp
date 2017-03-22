@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="css/HomeStyle.css">
 </head>
 <body>
+	<% HttpSession s = request.getSession(); %>
 	<div class="container">
 		<%@include file="navbar.jsp"%>
 	</div>
@@ -32,7 +33,6 @@
 						<form role="form" id="addCart" name="addCart" action="/Lab1/cart"
 							method="POST">
 							<% 
-								HttpSession s = request.getSession();
 								ArrayList<Ticket> tickets = (ArrayList<Ticket>)s.getServletContext().getAttribute("TicketList");
 								
 								for ( Ticket t : tickets ){
@@ -48,7 +48,7 @@
 										max="59" value="0">
 								</div>
 							</div>
-							<%} %>
+							<% } %>
 							<input type="hidden" name="METHOD" id="method" value="add">
 							<button type="submit" class="btn btn-info btn-block butSub"
 								onClick="">Add to cart</button>

@@ -11,7 +11,24 @@
 		</div>
 
 		<div class="navbar-collapse collapse">
-			
+						
+			<% if( ! request.getParameter("username").equals("null") ){ %>
+			<form class="navbar-form navbar-right" action="/Lab1/logout" method="post">
+				<button type="submit" class="btn btn-default">
+					<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Log out
+				</button>
+			</form>
+			<p class="navbar-text navbar-right">Logged in as <%= request.getParameter("username") %></p>
+			<% } else { %>
+			<form class="navbar-form navbar-right" action="/Lab1/login" method="get">
+				
+				<button type="submit" class="btn btn-default">
+					<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Log in
+				</button>
+			</form>			
+			<% } %>
+						
+			<!--
 			<form id="signin" action='/login' class="navbar-form navbar-right" role="form" method="post">
 				<div class="input-group">
 					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -27,6 +44,7 @@
 					<span><i class="glyphicon glyphicon-log-in"></i></span>&nbsp;Login
 				</button>
 			</form>
+-->
 
 		</div>
 	</div>

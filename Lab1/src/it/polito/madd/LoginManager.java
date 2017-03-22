@@ -5,35 +5,32 @@ import java.util.Map;
 
 public class LoginManager implements LoginService {
 	
-	private boolean isLogged;
-	private String username;
+	private boolean isLogged = false;
+	private String username = null;
+	private boolean initialized = false;
 	public static Map<String,String> Users = new HashMap<String,String>();
 	
-	public LoginManager(){
-		initializeUsers();
-	}
-
 	@Override
-	public void login(String username, String password) throws Exception {
+	public void login(String username, String password){
 		String correctPass;
-		if( ( correctPass = LoginManager.Users.get(username) ) == null ) 
-			throw new Exception("wrong user");
 		
+		if ( !this.initialized )
+			initializeUsers();
+		
+		if( ( correctPass = LoginManager.Users.get(username) ) == null )
+			return;
+				
 		if( !correctPass.equals(password) )
-			throw new Exception("wrong pass");
-		
+			return;
+			
 		this.isLogged = true;
 		this.username = username;
-	
-
 	}
 
 	@Override
-	public void logout() throws Exception {
-		if( isLogged == true )
-			isLogged = false;
-		else
-			throw new Exception("notLogged");
+	public void logout(){
+		isLogged = false;
+		username = null;
 	} 
 
 	@Override
@@ -47,10 +44,10 @@ public class LoginManager implements LoginService {
 	}
 	
 	private void initializeUsers() {
-		LoginManager.Users.put("Daniele","Magurano");
-		LoginManager.Users.put("Davide","Renna");
-		LoginManager.Users.put("Mattia","Manieri");
-		LoginManager.Users.put("Andrea","Pantaleo");
+		LoginManager.Users.put("daniele@gmail.com","magurano");
+		LoginManager.Users.put("davide@gmail.com","renna");
+		LoginManager.Users.put("mattia@gmail.com","manieri");
+		LoginManager.Users.put("andrea@gmail.com","pantaleo");
 	}
 
 }

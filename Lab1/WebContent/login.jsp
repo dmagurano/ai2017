@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"
-	import="it.polito.madd.model.Ticket,java.util.ArrayList"%>
+	pageEncoding="ISO-8859-1" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,7 +10,6 @@
 
 <!-- Bootstrap -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
@@ -24,7 +22,7 @@
 
 <link rel="stylesheet" href="css/test_home_style.css">
 
-<title>Test Home</title>
+<title>Log in</title>
 </head>
 <body>
 	<%  
@@ -35,34 +33,27 @@
 		<jsp:param name="username" value="<%= username %>" />
 	</jsp:include>
 
-	<div
-		class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+	<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Select your tickets</h3>
+				<h3 class="panel-title">Insert your credentials</h3>
 			</div>
 			<div class="panel-body">
 
-				<form role="form" id="addCart" name="addCart" action="/Lab1/cart"
-					method="POST">
-					<% 
-						ArrayList<Ticket> tickets = (ArrayList<Ticket>) s.getServletContext().getAttribute("TicketList");
-						
-						for ( Ticket t : tickets ){
-							String ticketName = t.getType().toString();
-						%>
+				<form action="/Lab1/login" method="post">
 					<div class="input-group">
-						<span class="input-group-addon"><%= ticketName.replace("_"," ") %></span>
-						<input type="number" class="form-control" name="<%= ticketName %>"
-							id="<%= ticketName %>" min="0" max="59" value="0">
+					  <span class="input-group-addon">Username</span>
+					  <input type="email" name="email" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
 					</div>
 					<br>
-					<% } %>
-					<input type="hidden" name="METHOD" id="method" value="add">
-					<button type="submit" class="btn btn-default btn-block" onClick="">Add
-						to cart</button>
+					<div class="input-group">
+					  <span class="input-group-addon">Password</span>
+					  <input type="password" name="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
+					</div>
+					<br>
+					<button type="submit" class="btn btn-default btn-block" onClick="">Log in</button>
 				</form>
-				
+
 			</div>
 		</div>
 	</div>

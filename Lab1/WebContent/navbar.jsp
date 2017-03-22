@@ -1,4 +1,7 @@
-
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"
+	import="it.polito.madd.model.Ticket,java.util.ArrayList,it.polito.madd.LoginManager"%>
+	
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
 		<div class="navbar-header">

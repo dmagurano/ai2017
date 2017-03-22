@@ -18,7 +18,7 @@
 <body>
 	<% HttpSession s = request.getSession(); %>
 	<div class="container">
-		<%@include file="navbar.jsp"  %>
+		<jsp:include page="navbar.jsp" />
 	</div>
 	<div class="container">
 		<div class="row centered-form">

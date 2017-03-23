@@ -37,27 +37,53 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("POST /login");
+		
+		String next = new String("/");
 		String email = request.getParameter("email"); 
 		String password = request.getParameter("password"); 
 		
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
 		
-		LoginManager lm = (LoginManager) session.getAttribute("LoginService");
-		
-		System.out.println(lm);
-		
-		lm.login(email, password);
-		
-		System.out.println(email);
-		System.out.println(password);
-		System.out.println(lm.isLogged());
-		
-		if (lm.isLogged())
-			session.setAttribute("username", email);
+		if (session != null){			
+			LoginManager lm = (LoginManager) session.getAttribute("LoginService");
+			
+			lm.login(email, password);
+			
+			System.out.println(email);
+			
+			if (lm.isLogged()){
+				session.setAttribute("username", email);
+				
+				if (session.getAttribute("next") != null){
+					System.out.println("next attribute present");
+					/* going to previuosly set page */
+					System.out.println("next: " + next);
+					next = (String) session.getAttribute("next");					
+					session.removeAttribute("next");
+					next = "/" + next.concat(".jsp");
+				}
+				else{
+					System.out.println("next attribute absent");
+					/* going to origin page */					
+					String referer = ((HttpServletRequest) request).getHeader("Referer");
+					System.out.println("from: " + referer);
+					String tmp = referer.substring(referer.lastIndexOf("/") + 1, referer.length());
+					if (tmp.equals("login") || tmp.equals("logout"))
+						next = "/";
+					else if (tmp.length() != 0) /* going to index */
+						next = "/" + tmp.concat(".jsp");
+				}
+			}
+			else
+				// TODO insert filed authentication message
+				session.invalidate();
+		}
 		else
-			session.removeAttribute("username");
+			request.getSession(true);
+
+		System.out.println("to: " + next);
 		
-		request.getRequestDispatcher("/cart.jsp").forward(request, response);
+		request.getRequestDispatcher(next).forward(request, response);
 	}
 
 }

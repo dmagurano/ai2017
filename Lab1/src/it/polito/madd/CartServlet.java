@@ -26,6 +26,7 @@ public class CartServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("GET /cart");
 		
 		HttpSession session = request.getSession();
 		
@@ -43,7 +44,11 @@ public class CartServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		//
+		// FIXME empty number value in post return white html page
+		// TODO ticket total amount == 0 -> redirecto to index.jsp
+		//
+		System.out.println("POST /cart");
 		HttpSession session = request.getSession();
 		int op = -1; // op == 1 -> modify, op == 0 -> add
 		

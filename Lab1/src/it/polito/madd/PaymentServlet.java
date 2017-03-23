@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import it.polito.madd.model.CreditCard;
 
 //TODO map the correct url
-@WebServlet("/private/checkout")
+@WebServlet("/private/payment")
 public class PaymentServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -21,7 +21,7 @@ public class PaymentServlet extends HttpServlet {
 			// simply forward the request to the jsp page
 			// TODO setup the correct jsp page
 			try {
-				session.getServletContext().getRequestDispatcher("/private/checkout.jsp").forward(request, response);
+				session.getServletContext().getRequestDispatcher("/checkout.jsp").forward(request, response);
 			} catch (ServletException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

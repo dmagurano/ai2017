@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
 /**
  * Servlet Filter implementation class PrivateFilter
  */
@@ -37,18 +39,33 @@ public class PrivateFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
+		System.out.println("FILTER /private");
 		// get the LoginManager from the session
 		if ( request instanceof HttpServletRequest ) {
-			HttpSession session = ( (HttpServletRequest)request ).getSession();
-			LoginManager lm = (LoginManager) session.getAttribute("LoginService");
 			
-			// checking if the user is logged
-			if( !lm.isLogged() ){
-				(  (HttpServletResponse)response ).sendRedirect("/Lab1/login.jsp");
-			} else {
-				// pass the request along the filter chain
-				chain.doFilter(request, response);
+			/* see LogotServlet.doGet */
+			HttpSession session = ( (HttpServletRequest)request ).getSession(false);
+			//System.out.println(session);
+			
+			if (session != null){
+				LoginManager lm = (LoginManager) session.getAttribute("LoginService");
+				//System.out.println(lm);
+				
+				// checking if the user is logged
+				if( !lm.isLogged() ){
+					String referer = ((HttpServletRequest) request).getHeader("Referer");
+					
+					String next = referer.substring(referer.lastIndexOf("/") + 1, referer.length());
+					
+					if ( next.equals("cart") )
+						session.setAttribute("next", "payment");
+					
+					System.out.println("GET /login");
+					(  (HttpServletResponse)response ).sendRedirect("/Lab1/login.jsp");
+				} else {
+					// pass the request along the filter chain
+					chain.doFilter(request, response);
+				}
 			}
 		}
 		

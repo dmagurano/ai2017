@@ -11,7 +11,9 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LogoutServlet
  */
-@WebServlet("/logout")
+@WebServlet(
+		urlPatterns={"/logout", "/logout.jsp"}
+		)
 public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -29,16 +31,22 @@ public class LogoutServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			System.out.println("GET /logout");
 			
-			HttpSession session = request.getSession();
+			/*
+				HttpSession#getSession(boolean create) - create - true to create a new session for this request if necessary;
+			  	false to return null if there's no current session.
+			 */
+			HttpSession session = request.getSession(false);
 			
-			LoginManager lm = (LoginManager) session.getAttribute("LoginService");
-			
-			System.out.println(lm);
-			
-			lm.logout();
-			
-			session.invalidate();
+			if (session != null){
+				LoginManager lm = (LoginManager) session.getAttribute("LoginService");
+				
+				System.out.println(lm);
+				
+				lm.logout();
 					
+				session.invalidate();
+			}
+			
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
 

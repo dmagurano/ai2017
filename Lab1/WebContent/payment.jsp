@@ -22,47 +22,26 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<link rel="stylesheet" href="css/test_home_style.css">
+<link rel="stylesheet" href="css/home_style.css">
 
-<title>Test Home</title>
+<title>Payment</title>
 </head>
 <body>
-	<%  
-		HttpSession s = request.getSession();
-		String username = (String) s.getAttribute("username");
-	%>
-	<jsp:include page="test_navbar.jsp">
-		<jsp:param name="username" value="<%= username %>" />
-	</jsp:include>
+	<div class="container">
+		<jsp:include page="navbar.jsp" />
+	</div>
+	<div class="container">
+		<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 
-	<div
-		class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Select your tickets</h3>
-			</div>
-			<div class="panel-body">
-
-				<form role="form" id="addCart" name="addCart" action="/Lab1/cart"
-					method="POST">
-					<% 
-						ArrayList<Ticket> tickets = (ArrayList<Ticket>) s.getServletContext().getAttribute("TicketList");
-						
-						for ( Ticket t : tickets ){
-							String ticketName = t.getType().toString();
-						%>
-					<div class="input-group">
-						<span class="input-group-addon"><%= ticketName.replace("_"," ") %></span>
-						<input type="number" class="form-control" name="<%= ticketName %>"
-							id="<%= ticketName %>" min="0" max="59" value="0">
-					</div>
-					<br>
-					<% } %>
-					<input type="hidden" name="METHOD" id="method" value="add">
-					<button type="submit" class="btn btn-default btn-block" onClick="">Add
-						to cart</button>
-				</form>
-				
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Payment Information</h3>
+				</div>
+				<div class="panel-body">
+	
+					Payment Panel
+					
+				</div>
 			</div>
 		</div>
 	</div>

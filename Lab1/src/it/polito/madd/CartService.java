@@ -10,6 +10,7 @@ public interface CartService {
 	public void add(Ticket ticket, int quantity) throws Exception;
 	public void remove(Ticket ticket, int quantity) throws Exception;
 	public void modify(TicketType ticket, int quantity) throws Exception;
+	public void clear();
 	public float getTotal();
 	public HashMap<Ticket,Integer> getItems();
 	

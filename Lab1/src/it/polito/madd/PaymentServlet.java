@@ -15,6 +15,11 @@ import it.polito.madd.model.CreditCard;
 @WebServlet("/private/payment")
 public class PaymentServlet extends HttpServlet {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 			
 			HttpSession session = request.getSession();
@@ -42,7 +47,7 @@ public class PaymentServlet extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 			// TODO check also for invalid value and raise exception
-		}	
+		}
 		
 		PaymentManager pm = (PaymentManager) session.getAttribute("PaymentService");
 		CartManager cm = (CartManager) session.getAttribute("CartService");

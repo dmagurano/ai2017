@@ -50,6 +50,7 @@ public class CartServlet extends HttpServlet {
 		//
 		System.out.println("POST /cart");
 		HttpSession session = request.getSession();
+		// TODO check if session exists!
 		int op = -1; // op == 1 -> modify, op == 0 -> add
 		
 		if (request.getParameter("METHOD").equals("add"))

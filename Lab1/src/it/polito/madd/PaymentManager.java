@@ -9,13 +9,19 @@ public class PaymentManager implements PaymentService {
 	private ArrayList<CreditCard> wallet = new ArrayList<CreditCard>();
 
 	@Override
-	public Boolean makePayment(float total, CreditCard cc) {
+	public Boolean makePayment() {
 		return true;
 	}
 
 	@Override
 	public Boolean addCardAndCheckDisponibility(CreditCard cc, float amount) {
-		if (!wallet.contains(cc))
+		Boolean exists = false;
+		for (CreditCard a_cc: wallet)
+		{
+			if (a_cc.getNumber().equals(cc.getNumber()))
+				exists = true;
+		}
+		if (!exists)
 			wallet.add(cc);
 		// simulated bank checking [........]
 		return true;

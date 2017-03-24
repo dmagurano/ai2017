@@ -14,7 +14,14 @@ public class CartManager implements CartService {
 	public void add(Ticket ticket, int quantity) throws Exception {
 		if (quantity < 0)
 			throw new Exception("The quantity is negative or 0");
-		Integer current = tickets.get(ticket);
+		Integer current = null;
+		for(Map.Entry<Ticket, Integer> t : tickets.entrySet()){
+			if(t.getKey().getType().equals(ticket.getType()))
+			{
+				ticket = t.getKey();
+				current = t.getValue();
+			}
+		}
 		if (current == null)
 			current = new Integer(0);
 		tickets.put(ticket, current + quantity);
@@ -58,14 +65,19 @@ public class CartManager implements CartService {
 			if(m.getKey().getType().equals(type))
 				ticket = m.getKey();
 		}
+		if (ticket == null)
+			throw new Exception("The item is not in the cart");
 		if (quantity < 0)
 			throw new Exception("The quantity is negative");
-		if (!tickets.containsKey(ticket))
-			throw new Exception("The item is not in the cart");
 		if (quantity == 0)
 			tickets.remove(ticket);
 		else
 			tickets.put(ticket, quantity);
+	}
+
+	@Override
+	public void clear() {
+		tickets.clear();
 	}
 
 }

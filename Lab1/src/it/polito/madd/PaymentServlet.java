@@ -72,7 +72,7 @@ public class PaymentServlet extends HttpServlet {
 		// send the request to the jsp page
 		// TODO setup the correct jsp page
 		try {
-			session.getServletContext().getRequestDispatcher("/pay.jsp").forward(request, response);
+			session.getServletContext().getRequestDispatcher("/payment.jsp").forward(request, response);
 		} catch (ServletException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

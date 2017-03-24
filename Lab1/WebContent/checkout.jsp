@@ -159,7 +159,7 @@
 								<label for="holder">Card holder </label><input type="text" class="form-control" name="holder" value="<%= h %>">
 								<label for="cvv">CVV </label><input type="number" class="form-control" max="999" name="cvv" value="<%= c %>">
 								<hr>
-								<button type="button" class="btn btn-success">
+								<button type="submit" class="btn btn-success">
 									Submit order <span class="glyphicon glyphicon-play"></span>
 								</button>
 							</form>

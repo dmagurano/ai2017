@@ -58,7 +58,7 @@ public class PrivateFilter implements Filter {
 					String next = referer.substring(referer.lastIndexOf("/") + 1, referer.length());
 					
 					if ( next.equals("cart") )
-						session.setAttribute("next", "payment");
+						session.setAttribute("next", "checkout");
 					
 					System.out.println("GET /login");
 					(  (HttpServletResponse)response ).sendRedirect("/Lab1/login.jsp");

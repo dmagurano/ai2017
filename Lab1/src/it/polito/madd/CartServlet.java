@@ -46,10 +46,13 @@ public class CartServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//
 		// FIXME empty number value in post return white html page
-		// TODO ticket total amount == 0 -> redirecto to index.jsp
 		//
 		System.out.println("POST /cart");
+		
+		int total_tickets = 0;
+		String next = "/cart.jsp";
 		HttpSession session = request.getSession();
+		
 		// TODO check if session exists!
 		int op = -1; // op == 1 -> modify, op == 0 -> add
 		
@@ -57,12 +60,14 @@ public class CartServlet extends HttpServlet {
 			op = 0; 
 		if (request.getParameter("METHOD").equals("modify"))
 			op = 1;
+		
 		if (op == -1)
 		{
 			// the request is not well formed, return 400
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
+		
 		// fill up the request with the params passed
 		CartManager cm = (CartManager) session.getAttribute("CartService");
 		if (cm == null)
@@ -70,6 +75,7 @@ public class CartServlet extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return;
 		}
+		
 		int value = 0;
 		synchronized (session)
 		{
@@ -80,16 +86,20 @@ public class CartServlet extends HttpServlet {
 				{
 					try {
 						value = Integer.parseInt(request.getParameter(type.toString()));
+						total_tickets += value;
+						
 						if (value == 0 && op == 0)
 							continue;
 					}
 					catch (NumberFormatException e)
 					{
-						// TODO wrong param value passed
+						// TODO set proper status 
 						// the request is not well formed, return 400
-						response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-						return;
+						// response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+						// TODO insert proper message
+						continue;
 					}
+					
 					try {
 						// discriminate the requested operation
 						if (op == 1)
@@ -106,10 +116,18 @@ public class CartServlet extends HttpServlet {
 			}
 		}
 		
+		if (total_tickets == 0)
+		{
+			// POST contains 0 tickets
+			session.removeAttribute("cart_is_full");
+			next = "/index.jsp";
+		}
+		else
+			session.setAttribute("cart_is_full", "true");
+		
 		// forward the request to the jsp page
-		// TODO setup the correct jsp page
 		try {
-			session.getServletContext().getRequestDispatcher("/cart.jsp").forward(request, response);
+			session.getServletContext().getRequestDispatcher(next).forward(request, response);
 		} catch (ServletException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

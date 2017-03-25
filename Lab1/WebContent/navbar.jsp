@@ -17,34 +17,43 @@
 
 		<div class="navbar-collapse collapse">
 			 <ul class="nav navbar-nav navbar-right">
-		<% 
-			LoginManager lm = (LoginManager) session.getAttribute("LoginService"); 
-			
-			if ( !lm.isLogged() ) {
-		%>
+		<% 	if ( session.getAttribute("cart_is_full") == "true"){ %>
 			<li>
-				<form id="signin" action='/Lab1/login' class="navbar-form navbar-right" role="form" method="post">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-						<input id="email" type="email" class="form-control" name="email" value="" placeholder="Email Address" required>
-					</div>
-	
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-						<input id="password" type="password" class="form-control" name="password" value="" placeholder="Password" required>
-					</div>
-	
-					<button type="submit" class="btn btn-primary">
-						<span><i class="glyphicon glyphicon-log-in"></i></span>&nbsp;Login
+				<form class="navbar-form navbar-right" action="/Lab1/cart" method="get">
+					<button type="submit" class="btn btn-default">
+						<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>&nbsp;Cart
 					</button>
 				</form>
 			</li>
-		<% } else { %>
+		<% } %>
+		<% 
+			LoginManager lm = (LoginManager) session.getAttribute("LoginService"); 
+			
+			if ( (lm != null) && lm.isLogged() ) {
+		%>
 		<li><p class="navbar-text navbar-right">Logged in as <%= lm.getUsername() %>&nbsp;</p></li>
 		<li>
 			<form class="navbar-form navbar-right" action="/Lab1/logout" method="get">
 				<button type="submit" class="btn btn-primary">
 					<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Log out
+				</button>
+			</form>
+		</li>
+		<% } else { %>
+		<li>
+			<form id="signin" action='/Lab1/login' class="navbar-form navbar-right" role="form" method="post">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input id="email" type="email" class="form-control" name="email" value="" placeholder="Email Address" required>
+				</div>
+
+				<div class="input-group">
+					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+					<input id="password" type="password" class="form-control" name="password" value="" placeholder="Password" required>
+				</div>
+
+				<button type="submit" class="btn btn-primary">
+					<span><i class="glyphicon glyphicon-log-in"></i></span>&nbsp;Login
 				</button>
 			</form>
 		</li>	

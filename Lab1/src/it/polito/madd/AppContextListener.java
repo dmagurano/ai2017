@@ -19,6 +19,8 @@ import it.polito.madd.model.*;
 public class AppContextListener implements ServletContextListener, HttpSessionListener {
 	
 	public void contextInitialized(ServletContextEvent e){
+    	// invoked on server startup
+		
 		ArrayList<Ticket> Tickets = new ArrayList<Ticket>();
 		//initalizing arraylist
 		for ( TicketType type: TicketType.values() ) {
@@ -30,6 +32,8 @@ public class AppContextListener implements ServletContextListener, HttpSessionLi
 	}
 
     public void sessionCreated(HttpSessionEvent se) {
+    	// invoked for each user
+    	
     	se.getSession().setAttribute("LoginService", new LoginManager());
     	se.getSession().setAttribute("CartService", new CartManager());
     	se.getSession().setAttribute("PaymentService", new PaymentManager());

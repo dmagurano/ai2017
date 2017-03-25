@@ -61,14 +61,18 @@ public class CartManager implements CartService {
 	@Override
 	public void modify(TicketType type, int quantity) throws Exception {
 		Ticket ticket = null;
+		
 		for(Map.Entry<Ticket, Integer> m : tickets.entrySet()){
 			if(m.getKey().getType().equals(type))
 				ticket = m.getKey();
 		}
+		
 		if (ticket == null)
 			throw new Exception("The item is not in the cart");
+		
 		if (quantity < 0)
 			throw new Exception("The quantity is negative");
+		
 		if (quantity == 0)
 			tickets.remove(ticket);
 		else

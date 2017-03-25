@@ -12,7 +12,6 @@
 <!-- Bootstrap -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -32,11 +31,14 @@
 	</div>
 	<div class="container">
 		<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-			<div class="alert alert-info alert-dismissible" role="alert">
-			  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			  <strong>Colors</strong>, not now.
-			</div>
-	
+		
+			<% if (session.getAttribute("message") != null) { %>
+				<div class="alert alert-<%= session.getAttribute("message-type") %> alert-dismissible" role="alert">
+				  <button type="button" class="close" data-dismiss="alert" ari	a-label="Close"><span aria-hidden="true">&times;</span></button>
+				  <%= session.getAttribute("message") %>
+				</div>
+			<% } %>
+			
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Select your tickets</h3>

@@ -104,7 +104,7 @@
 											Update your cart
 										</button>
 									</td>
-									<td><a href="/Lab1/private/payment">
+									<td><a href="/Lab1/private/checkout.jsp">
 										<button type="button" class="btn btn-success">
 											Checkout <span class="glyphicon glyphicon-play"></span>
 										</button>

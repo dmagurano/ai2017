@@ -17,14 +17,11 @@ public class LoginManager implements LoginService {
 		if ( !this.initialized )
 			initializeUsers();
 		
-		if( ( correctPass = LoginManager.Users.get(username) ) == null )
-			return;
-				
-		if( !correctPass.equals(password) )
-			return;
-			
-		this.isLogged = true;
-		this.username = username;
+		if( ( correctPass = LoginManager.Users.get(username) ) != null )
+			if( correctPass.equals(password) ){
+				this.isLogged = true;
+				this.username = username;
+			}
 	}
 
 	@Override

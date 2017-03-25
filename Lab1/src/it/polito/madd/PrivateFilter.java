@@ -45,25 +45,24 @@ public class PrivateFilter implements Filter {
 			
 			/* see LogotServlet.doGet */
 			HttpSession session = ( (HttpServletRequest)request ).getSession(false);
-			//System.out.println(session);
 			
 			if (session != null){
 				LoginManager lm = (LoginManager) session.getAttribute("LoginService");
-				//System.out.println(lm);
 				
 				// checking if the user is logged
 				if( !lm.isLogged() ){
 					String referer = ((HttpServletRequest) request).getHeader("Referer");
 					
-					String next = referer.substring(referer.lastIndexOf("/") + 1, referer.length());
+					String origin = referer.substring(referer.lastIndexOf("/") + 1, referer.length());
 					
-					if ( next.equals("cart") )
-						session.setAttribute("next", "checkout");
+					if ( origin.equals("cart") )
+						session.setAttribute("next", "private/checkout");
 					
-					System.out.println("GET /login");
+					System.out.println("FILTER -> GET /login");
 					(  (HttpServletResponse)response ).sendRedirect("/Lab1/login.jsp");
 				} else {
 					// pass the request along the filter chain
+										
 					chain.doFilter(request, response);
 				}
 			}

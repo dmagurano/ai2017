@@ -26,7 +26,7 @@ public class PaymentServlet extends HttpServlet {
 			// simply forward the request to the jsp page
 			// TODO setup the correct jsp page
 			try {
-				session.getServletContext().getRequestDispatcher("/checkout.jsp").forward(request, response);
+				session.getServletContext().getRequestDispatcher("/private/checkout.jsp").forward(request, response);
 			} catch (ServletException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -41,7 +41,8 @@ public class PaymentServlet extends HttpServlet {
 		number = request.getParameter("number");
 		holder = request.getParameter("holder");
 		cvv = request.getParameter("cvv");
-		if (number == null || holder == null || cvv == null)
+		
+		if (number == null || holder == null || cvv == null || number.length() == 0 || holder.length() == 0 || cvv.length() == 0)
 		{
 			// the request is not well formed, return 400
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -63,16 +64,18 @@ public class PaymentServlet extends HttpServlet {
 			if (!pm.addCardAndCheckDisponibility(new CreditCard(number, holder, cvv), cm.getTotal()))
 				// card rejected
 				request.setAttribute("TRANSACTION_RESULT", "rejected");
-			else
+			else{
 				// card accepted
 				request.setAttribute("TRANSACTION_RESULT", "accepted");
+				request.getSession().removeAttribute("cart_is_full");
+			}
 			
 		}
 		
 		// send the request to the jsp page
 		// TODO setup the correct jsp page
 		try {
-			session.getServletContext().getRequestDispatcher("/payment.jsp").forward(request, response);
+			session.getServletContext().getRequestDispatcher("/private/payment.jsp").forward(request, response);
 		} catch (ServletException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

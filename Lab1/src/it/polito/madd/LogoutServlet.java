@@ -40,21 +40,23 @@ public class LogoutServlet extends HttpServlet {
 			if (session != null){
 				LoginManager lm = (LoginManager) session.getAttribute("LoginService");
 				
-				System.out.println(lm);
-				
-				lm.logout();
-					
+				if (lm != null)				
+					lm.logout();
+				/*
+				session.setAttribute("message-type", "info");
+				session.setAttribute("message", "Logged out.");
+				*/
 				session.invalidate();
 			}
 			
-			request.getRequestDispatcher("/index.jsp").forward(request, response);
+			request.getRequestDispatcher("/").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		this.doGet(request, response);
 	}
 
 }

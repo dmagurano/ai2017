@@ -22,13 +22,13 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<link rel="stylesheet" href="css/home_style.css">
+<link rel="stylesheet" href="../css/home_style.css">
 
 <title>Payment</title>
 </head>
 <body>
 	<div class="container">
-		<jsp:include page="navbar.jsp" />
+		<jsp:include page="../navbar.jsp" />
 	</div>
 	<div class="container">
 		<% 
@@ -53,7 +53,7 @@
 				</div>
 				<div class="panel-body">
 					<% if(payment_ok) { %>
-						<h4>Your order has been completed. The total amount of <%= amount %> has been charged on your card. Thank you. </h4>
+						<h4>Your order has been completed.<br>The total amount of <%= amount %> has been charged on your card.<br>Thank you. </h4>
 					<% } else { %>
 						<h4>We are facing some problem with your payment information. Please check it. </h4>
 					<% } %>

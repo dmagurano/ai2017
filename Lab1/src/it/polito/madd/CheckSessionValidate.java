@@ -47,7 +47,7 @@ public class CheckSessionValidate implements Filter {
 			//when the container restarts.
 			
 			if(session.getAttribute("LoginService") == null || session.getAttribute("PaymentService") == null || session.getAttribute("CartService")== null  )
-				session.invalidate();
+				session.invalidate(); //invalidate session
 		    
 		    
 		    	

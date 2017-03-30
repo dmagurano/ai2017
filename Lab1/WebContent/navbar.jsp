@@ -29,7 +29,7 @@
 		<% 
 			LoginManager lm = (LoginManager) session.getAttribute("LoginService"); 
 			
-			if ( (lm != null) && lm.isLogged() ) {
+			if ( lm.isLogged() ) {
 		%>
 		<li><p class="navbar-text navbar-right">Logged in as <%= lm.getUsername() %>&nbsp;</p></li>
 		<li>

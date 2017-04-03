@@ -27,7 +27,7 @@ public class Main {
 	}
 	
 	public static Connection connect() throws SQLException{
-		String url = "jdbc:postgresql://localhost:5432/"; // to specify in -p
+		String url = "jdbc:postgresql://localhost:5432/trasporti"; // to specify in -p
 		
 		Connection conn = DriverManager.getConnection(url, "postgres", "ai-user-password");
 		
@@ -39,12 +39,16 @@ public class Main {
 
 		JSONArray latLng = (JSONArray) jsonStop.get("latLng");
 
-		preparedStatementLine.setString(1, (String) jsonStop.get("id"));
-		preparedStatementLine.setString(2, (String) jsonStop.get("name"));
-		preparedStatementLine.setDouble(3, (double) latLng.get(0));
-		preparedStatementLine.setDouble(4, (double) latLng.get(1));
+		preparedStatementStop.setString(1, (String) jsonStop.get("id"));
+		preparedStatementStop.setString(2, (String) jsonStop.get("name"));
+		preparedStatementStop.setDouble(3, (double) latLng.get(0));
+		preparedStatementStop.setDouble(4, (double) latLng.get(1));
 		
-		preparedStatementLine.executeQuery();
+		try {
+			preparedStatementStop.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void executeQueryLine(JSONObject l){

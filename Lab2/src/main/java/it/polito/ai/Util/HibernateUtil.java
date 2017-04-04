@@ -25,6 +25,8 @@ public class HibernateUtil {
     			.applySetting(Environment.HBM2DDL_AUTO, "validate")
     			.applySetting(Environment.FORMAT_SQL, "true")
     			.applySetting(Environment.SHOW_SQL, "true")
+    			.applySetting(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect")
+    			.applySetting(Environment.URL, "jdbc:postgresql://localhost:5432/trasporti")
     			.build();
     	
     	Metadata metadata = new MetadataSources(registry)

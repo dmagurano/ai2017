@@ -200,16 +200,5 @@ public class Main {
 			conn.close();
 		}
 		System.out.println("End.");
-		
-		/*
-		for (Object line : lines){
-			JSONObject jsonLine = (JSONObject) line;
-			String l = (String) jsonLine.get("line");
-			String d = (String) jsonLine.get("desc");
-			
-			
-			System.out.println(l + " " + d);
-		}
-		*/
 	}
 }

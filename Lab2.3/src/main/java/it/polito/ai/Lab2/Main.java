@@ -41,7 +41,7 @@ public class Main {
 		String create_db = "CREATE DATABASE trasporti;";
 		String create_tables = " create table if not exists BusLine (line varchar(20) not null, description varchar(255), primary key (line));" +
 				"create table if not exists BusStop (id varchar(20) not null, name varchar(255) not null, lat double precision, lng double precision, primary key (id));" + 
-				"create table if not exists BusLineStop (stopId varchar(20) not null, lineId varchar(20) not null, seqenceNumber smallint not null, primary key(stopId, lineId), foreign key (stopId) references BusStop(id), foreign key (lineId) references BusLine(line));";
+				"create table if not exists BusLineStop (stopId varchar(20) not null, lineId varchar(20) not null, seqenceNumber smallint not null, primary key(stopId, lineId, seqenceNumber), foreign key (stopId) references BusStop(id), foreign key (lineId) references BusLine(line));";
 		
 		Statement s1 = c.createStatement();
 		
@@ -119,14 +119,12 @@ public class Main {
 		 * 
 		 */
 		preparedStatementStopLine.setString(2, (String) jsonLine.get("line"));
-		System.out.println("################# DEBUG: " + jsonLine.get("line").toString());
 		JSONArray stops = (JSONArray) jsonLine.get("stops");
 		short seq = 0;
 		for (Object stop: stops)
 		{
 			seq++;
 			String jsonStop = (String) stop;
-			System.out.println("# stop " + jsonStop + " " + seq);
 			preparedStatementStopLine.setString(1, jsonStop);
 			preparedStatementStopLine.setShort(3, seq);
 			try {
@@ -163,6 +161,7 @@ public class Main {
 		JSONArray stops = (JSONArray) jsonObject.get("stops");
 		// insert every stop into the db
 		try {
+			System.out.println("Inserting stops.");
 			for(Object stop : stops)
 				executeQueryStop(stop);
 		}
@@ -175,6 +174,7 @@ public class Main {
 		}
 		// insert every line into the db
 		try {
+			System.out.println("Inserting lines.");
 			for(Object line : lines)
 				executeQueryLine(line);
 		}
@@ -187,14 +187,9 @@ public class Main {
 		}
 		// finally insert the line stop sequence
 		try {
+			System.out.println("Inserting LineStops.");
 			for(Object line : lines)
-			{
-				// TODO solve this
-				// executeQueryStopLine(line);
-				System.out.println("Too much.");
-				break;
-			}
-				
+				executeQueryStopLine(line);
 		}
 		catch(Exception e)
 		{

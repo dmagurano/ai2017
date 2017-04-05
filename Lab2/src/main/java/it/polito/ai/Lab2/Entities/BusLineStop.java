@@ -1,21 +1,34 @@
 package it.polito.ai.Lab2.Entities;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 @Entity
-public class BusLineStop {
+@Table(name="buslinestop")
+public class BusLineStop implements Serializable {
 	
+//	@Id
+//	private String busL;
+//	
+//	@Id
+//	private String busS;
+	
+	@Column(nullable=false)
+	private Short seqencenumber;
+	
+	@ManyToOne
 	@Id
+	@JoinColumn(name="lineId")
 	private BusLine busLine;
 	
 	@Id
+	@ManyToOne
+	@JoinColumn(name="stopId")
 	private BusStop busStop;
 	
-	@Column(nullable=false)
-	private Integer seqenceNumber;
 	
-	@ManyToOne
-	@JoinColumn(name="lineId")
+	
 	public BusLine getBusLine() {
 		return busLine;
 	}
@@ -24,8 +37,7 @@ public class BusLineStop {
 		this.busLine = busLine;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="stopId")
+	
 	public BusStop getBusStop() {
 		return busStop;
 	}
@@ -34,12 +46,12 @@ public class BusLineStop {
 		this.busStop = busStop;
 	}
 
-	public Integer getSeqenceNumber() {
-		return seqenceNumber;
+	public Short getSeqenceNumber() {
+		return seqencenumber;
 	}
 
-	public void setSeqenceNumber(Integer seqenceNumber) {
-		this.seqenceNumber = seqenceNumber;
+	public void setSeqenceNumber(Short seqenceNumber) {
+		this.seqencenumber = seqenceNumber;
 	}
 	
 

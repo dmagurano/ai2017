@@ -7,17 +7,21 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import it.polito.ai.Lab2.Entities.BusLine;
+
 /**
  * Servlet Filter implementation class HibernateSessionRequestFilter
  */
+@WebFilter("/*")
 public class HibernateSessionRequestFilter implements Filter {
 
-	private SessionFactory sf = HibernateUtil.getSessionFactory();
+	private static SessionFactory sf = HibernateUtil.getSessionFactory();
     /**
      * Default constructor. 
      */
@@ -42,7 +46,12 @@ public class HibernateSessionRequestFilter implements Filter {
 	    
 	    try {
 	      tx=s.beginTransaction();
+	      request.setAttribute("Session", s);
 	      chain.doFilter(request, response);
+	      
+	      //Do your operation here
+	      
+	      
 	      tx.commit();
 	      
 	    } catch (Throwable ex) {

@@ -7,9 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 @Entity
+@Table(name="busstop")
 public class BusStop {
 	
 	@Id
@@ -18,13 +20,14 @@ public class BusStop {
 	@Column(nullable=false)
 	private String name;
 	
-	@Column
+	@Column(nullable=false)
 	private double lat;
 	
-	@Column
+	@Column(nullable=false)
 	private double lng;
 	
-	@OneToMany(mappedBy="busLine")
+	
+	@OneToMany(mappedBy="busStop")
 	private List<BusLineStop> busLines = new ArrayList<BusLineStop>();
 	
 	public String getId() {
@@ -51,13 +54,11 @@ public class BusStop {
 	public void setLng(double lng) {
 		this.lng = lng;
 	}
-
-	
 	public List<BusLineStop> getBusLines() {
 		return busLines;
 	}
 	
-	public void setBusLines(List<BusLineStop> busLines) {
+	public void setBusLines(ArrayList<BusLineStop> busLines) {
 		this.busLines = busLines;
 	}
 }

@@ -7,16 +7,18 @@ import javax.persistence.*;
 
 
 @Entity
+@Table(name="busline")
 public class BusLine {
 
-	
+	@Id
 	private String line;
 	private String description;
 	
-	@OneToMany(mappedBy = "busStop")
+	
+	@OneToMany(mappedBy = "busLine")
 	private List<BusLineStop> busStops = new ArrayList<BusLineStop>();
 	
-	@Id
+	
 	public String getLine() {
 		return line;
 	}
@@ -30,11 +32,10 @@ public class BusLine {
 		this.description = description;
 	}
 	
-	
-	public List<BusLineStop> getBusstops() {
+	public List<BusLineStop> getBusStops() {
 		return busStops;
 	}
-	public void setBusstops(ArrayList<BusLineStop> busstops) {
+	public void setBusStops(List<BusLineStop> busstops) {
 		this.busStops = busstops;
 	}
 

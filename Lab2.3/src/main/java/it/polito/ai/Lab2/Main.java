@@ -76,7 +76,7 @@ public class Main {
 		catch (org.postgresql.util.PSQLException e)
 		{
 			// probably mattia's pc? :)
-			conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/trasporti", "postgres", "ai-user-password");				
+			conn = DriverManager.getConnection("jdbc:postgresql://192.168.99.100:5432/trasporti", "postgres", "ai-user-password");				
 		}
 		return conn;
 	}
@@ -200,5 +200,6 @@ public class Main {
 			conn.close();
 		}
 		System.out.println("End.");
+	
 	}
 }

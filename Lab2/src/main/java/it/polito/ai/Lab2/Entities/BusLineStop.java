@@ -2,21 +2,20 @@ package it.polito.ai.Lab2.Entities;
 
 import javax.persistence.*;
 
+@Entity
 public class BusLineStop {
 	
-	@ManyToOne
-	@JoinColumn(name="lineId")
 	@Id
 	private BusLine busLine;
 	
-	@ManyToOne
-	@JoinColumn(name="stopId")
 	@Id
 	private BusStop busStop;
 	
 	@Column(nullable=false)
 	private Integer seqenceNumber;
-
+	
+	@ManyToOne
+	@JoinColumn(name="lineId")
 	public BusLine getBusLine() {
 		return busLine;
 	}
@@ -25,6 +24,8 @@ public class BusLineStop {
 		this.busLine = busLine;
 	}
 
+	@ManyToOne
+	@JoinColumn(name="stopId")
 	public BusStop getBusStop() {
 		return busStop;
 	}

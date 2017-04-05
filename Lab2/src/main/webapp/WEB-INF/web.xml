@@ -14,7 +14,4 @@
   	<filter-name>HibernateSessionRequestFilter</filter-name>
   	<url-pattern>/HibernateSessionRequestFilter</url-pattern>
   </filter-mapping>
-  <listener>
-  	<listener-class>it.polito.ai.Listeners.AppContextListener</listener-class>
-  </listener>
 </web-app>

@@ -1,6 +1,7 @@
 package it.polito.ai.Lab2.Entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -12,8 +13,8 @@ public class BusLine {
 	private String line;
 	private String description;
 	
-	
-	private ArrayList<BusStop> busStops = new ArrayList<BusStop>();
+	@OneToMany(mappedBy = "busStop")
+	private List<BusLineStop> busStops = new ArrayList<BusLineStop>();
 	
 	@Id
 	public String getLine() {
@@ -29,11 +30,11 @@ public class BusLine {
 		this.description = description;
 	}
 	
-	@OneToMany(mappedBy = "busLine")
-	public ArrayList<BusStop> getBusstops() {
+	
+	public List<BusLineStop> getBusstops() {
 		return busStops;
 	}
-	public void setBusstops(ArrayList<BusStop> busstops) {
+	public void setBusstops(ArrayList<BusLineStop> busstops) {
 		this.busStops = busstops;
 	}
 

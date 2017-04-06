@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="it.polito.ai.Util.LineManager" import="java.util.List"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -108,15 +108,24 @@
 							</tr>
 						</thead>
 						<tbody>
+							<% LineManager lm = new LineManager(); 
+							   List<String> lines = lm.getAllLines();
+							   if(lines.size() == 0){
+							%>
 							<tr>
-								<td  id="1"> Linea1</td>
+								<td> Lines not found </td>
 							</tr>
-							<tr>
-								<td  id="2"> Linea2</td>
-							</tr>
-							<tr>
-								<td  id="3"> Linea3</td>
-							</tr>
+							<%}else{
+								
+								for(String line: lines){%>
+									<tr>
+										<td  id=<%= line %>> Line <%=line %></td>
+									</tr>
+							<%		
+								}
+								
+							} %>
+							
 						</tbody>
 					</table>
 				</div>

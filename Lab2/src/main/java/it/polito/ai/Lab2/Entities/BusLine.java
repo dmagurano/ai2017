@@ -15,12 +15,17 @@ public class BusLine {
 	private String description;
 	
 	
-	@OneToMany(mappedBy = "busLine")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "busLine")
 	private List<BusLineStop> busStops = new ArrayList<BusLineStop>();
 	
 	
 	public String getLine() {
-		return line;
+		try{
+			return line;
+		} catch (Exception e){
+			e.printStackTrace();
+			return line;
+		}
 	}
 	public void setLine(String line) {
 		this.line = line;

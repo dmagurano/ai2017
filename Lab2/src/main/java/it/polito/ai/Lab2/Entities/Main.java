@@ -16,6 +16,7 @@ public class Main {
 
 	private static SessionFactory sf = HibernateUtil.getSessionFactory();
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Session s=sf.getCurrentSession();
@@ -30,13 +31,17 @@ public class Main {
 	      System.out.println("Linea:  " +bl.getLine());
 	      */
 	      //bl inner join bl.busStops.id
-	      List<String> lines = new ArrayList<String>();
+	      //List<String> lines = new ArrayList<String>();
 			//Session s = HibernateUtil.getSessionFactory().getCurrentSession(); 
 	      
-			String hql = "select bs.id from BusStop bs join bs.busLines bl where bl.line=:line";
-			Query query = s.createQuery(hql);
-			query.setParameter("line", "METRO");
-			lines = query.list();
+	      	BusLine bl = (BusLine) s.load(BusLine.class, "METRO");
+	      	
+			String hql = "SELECT id FROM BusStop bs JOIN bs.busLines bl WHERE bl.busLine=:line";
+			
+			List<String> lines = s.createQuery(hql)
+				.setParameter("line", bl)
+				.list();
+			
 			System.out.println("Ecco");
 			//for(String i : lines){
 				
@@ -48,6 +53,7 @@ public class Main {
 	      
 	    } catch (Throwable ex) {
 	    	
+	    	ex.printStackTrace();
 	      if (tx!=null) tx.rollback();
 	      
 	      

@@ -17,13 +17,13 @@ public class BusLineStop implements Serializable {
 	@Column(nullable=false)
 	private Short seqencenumber;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@Id
 	@JoinColumn(name="lineId")
 	private BusLine busLine;
 	
 	@Id
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="stopId")
 	private BusStop busStop;
 	

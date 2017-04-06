@@ -3,6 +3,7 @@ package it.polito.ai.Lab2.Entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public class BusStop {
 	private double lng;
 	
 	
-	@OneToMany(mappedBy="busStop")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="busStop")
 	private List<BusLineStop> busLines = new ArrayList<BusLineStop>();
 	
 	public String getId() {

@@ -8,17 +8,11 @@ import javax.persistence.*;
 @Table(name="buslinestop")
 public class BusLineStop implements Serializable {
 	
-//	@Id
-//	private String busL;
-//	
-//	@Id
-//	private String busS;
-	
 	@Column(nullable=false)
 	private Short seqencenumber;
-	
+
+	@Id	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@Id
 	@JoinColumn(name="lineId")
 	private BusLine busLine;
 	
@@ -26,8 +20,6 @@ public class BusLineStop implements Serializable {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="stopId")
 	private BusStop busStop;
-	
-	
 	
 	public BusLine getBusLine() {
 		return busLine;
@@ -37,7 +29,6 @@ public class BusLineStop implements Serializable {
 		this.busLine = busLine;
 	}
 
-	
 	public BusStop getBusStop() {
 		return busStop;
 	}
@@ -53,6 +44,4 @@ public class BusLineStop implements Serializable {
 	public void setSeqenceNumber(Short seqenceNumber) {
 		this.seqencenumber = seqenceNumber;
 	}
-	
-
 }

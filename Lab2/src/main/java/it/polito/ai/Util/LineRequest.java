@@ -1,16 +1,18 @@
 package it.polito.ai.Util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.hibernate.Session;
+import com.google.gson.Gson;
 
-import it.polito.ai.Lab2.Entities.BusLine;
+import it.polito.ai.Lab2.Entities.BusStop;
 
 /**
  * Servlet implementation class LineRequest
@@ -18,37 +20,50 @@ import it.polito.ai.Lab2.Entities.BusLine;
 @WebServlet("/LineRequest")
 public class LineRequest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public LineRequest() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		HttpSession session = request.getSession();
-		session.getServletContext().getRequestDispatcher("/map.jsp").forward(request, response);
-		
-		System.out.println("Linea selezionata "+request.getParameter("selected_line"));
-		Session s = (Session) request.getAttribute("Session");
-		
-		BusLine bl = s.get(BusLine.class, "3");
-	      if(bl == null){System.out.println("Niente linea");}
-	      System.out.println("Linea:  " +bl.getLine());
-		
+	public LineRequest() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("entering LineRequest.doGet()");
+		
+		String selectedLine = request.getParameter("selected_line");
+		
+		LineManager lm = new LineManager();
+		
+		ArrayList<BusStop> busStops = (ArrayList<BusStop>) lm.getLineStops(selectedLine);
+		
+		for (BusStop bs : busStops)
+			bs.setBusLines(null);
+		
+		Gson gson = new Gson();
+		
+		String busStopsJson = gson.toJson(busStops);
+		
+		// System.out.println(busStopsJson);
+		
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();  
+		out.print(busStopsJson);
+		out.flush();
+	
+		System.out.println("exiting LineRequest.doGet()");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

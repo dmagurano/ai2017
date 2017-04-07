@@ -1,30 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Lab2 Page2</title>
 
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-	
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
-	<style type="text/css">
-  		#mapid { height: 500px; width: 500px; }
- 	</style>
+<style type="text/css">
+#mapid {
+	height: 500px;
+	width: 500px;
+}
+</style>
 
 </head>
 <body>
-	
+
 	<div id="mapid"></div>
-	
+
 	<script>
-			var mymap = L.map('mapid').setView([45.07, 7.69], 13);
+			var busStops;
+	
+			var mymap = L.map('mapid').setView([45.07, 7.69], 12);
 			
 			L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGF2cjA5MTAiLCJhIjoiY2owemk4N2FmMDJ1ZzMzbno3YjZxZDN3YyJ9.eJdGDM0goIVXcFmMrQX8og').addTo(mymap);
-			var marker = L.marker([45.07, 7.69]).addTo(mymap);
-			marker.bindPopup("<b>You are hacked!</b><br>I am a popup.").openPopup();
+			
+			//var marker = L.marker([45.07, 7.69]).addTo(mymap);
+			//marker.bindPopup("<b>You are hacked!</b><br>I am a popup.").openPopup();
+			
+			
 			
 			var pointA = new L.LatLng(45.07, 7.69);
 			var pointB = new L.LatLng(45.08, 7.70);

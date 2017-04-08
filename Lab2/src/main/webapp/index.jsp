@@ -20,31 +20,73 @@
 <link rel="stylesheet" href="css/index_style.css">
 
 <script type="text/javascript">
+	var lineId;
 	var mymap;
 	var polyline;
 	var markers = [];
+	var direction = "return";
+	var pointList = [];
+	var min_lat, max_lat, min_lng, max_lng;
 	
-	window.onload = function(){
+	function insertMaker(busStop){
+		//console.log(busStop.id);
+		
+		var curPoint = new L.LatLng(busStop.lat, busStop.lng);
+		pointList.push(curPoint);
+		
+		var marker = L.marker([busStop.lat, busStop.lng]).addTo(mymap)
+			.bindPopup() // in order to modify popup content
+			.on("click", function(e){
+				clickOnMarker(e, busStop.name, busStop.id)
+			});
+		
+		markers.push(marker);
+		mymap.addLayer(marker);
+
+		if (busStop.lat < min_lat)
+			min_lat = busStop.lat;
+		if (busStop.lat > max_lat)
+			max_lat = busStop.lat;								
+		if (busStop.lng < min_lng)
+			min_lng = busStop.lng;
+		if (busStop.lng > max_lng)
+			max_lng = busStop.lng;
+	}
+		
+	$(function() {
+		//console.log("entered $(function(){})");
+		
+		// hiding direction-buttons
+		/*
+		element.style.visibility = 'hidden';      // Hide
+		element.style.visibility = 'visible';     // Show
+		*/
+		document.getElementById("direction-buttons").style.visibility = "hidden";
 		// initializing map
 		mymap = L.map('mapid').setView([45.07, 7.69], 13);
 		L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGF2cjA5MTAiLCJhIjoiY2owemk4N2FmMDJ1ZzMzbno3YjZxZDN3YyJ9.eJdGDM0goIVXcFmMrQX8og').addTo(mymap);
-	}
-	
-	$(function() {
-		var bid, trid;
 		
-		$('#lines tr')
+		$('#lines tr, #going-button, #return-button')
 			.click(function() {
-				trid = $(this).attr('id'); // table row ID
+				//console.log("entered $('#lines tr').click(function() {})");
+				
+				lineId = $(this).attr('value');
+				
+				//console.log(this.tagName);
+				if (this.tagName === "TR"){
+					direction = "going";
+					document.getElementById("going-button").value = lineId;
+					document.getElementById("return-button").value = lineId;
+				}
 				
 				$.ajax({
 					url : '/Lab2/LineRequest',
 					type : 'GET',
 					data : {
-						'selected_line' : trid,
+						'selected_line' : lineId,
 					},
 					dataType : 'json',
-
+	
 					success : function(data, textStatus, jqXHR) {
 						//our country code was correct so we have some information to display
 						if (data.length > 0) {
@@ -56,32 +98,35 @@
 							if (typeof polyline !== 'undefined')
 								mymap.removeLayer(polyline);
 							
-							var pointList = [];
-							var marker
-							var min_lat = 90, max_lat = -90, min_lng = 180, max_lng = -180;
+							pointList = [];
+							min_lat = 90; max_lat = -90; min_lng = 180; max_lng = -180;
+							var marker;
 							
-							$.each(data, function(k,busStop) {
-								var curPoint = new L.LatLng(busStop.lat, busStop.lng);
-								pointList.push(curPoint);
-								
-								var marker = L.marker([busStop.lat, busStop.lng]).addTo(mymap)
-									.bindPopup() // in order to modify popup content
-									.on("click", function(e){
-										clickOnMarker(e, busStop.name, busStop.id)
-									});
-								
-								markers.push(marker);
-								mymap.addLayer(marker);
-
-								if (busStop.lat < min_lat)
-									min_lat = busStop.lat;
-								if (busStop.lat > max_lat)
-									max_lat = busStop.lat;								
-								if (busStop.lng < min_lng)
-									min_lng = busStop.lng;
-								if (busStop.lng > max_lng)
-									max_lng = busStop.lng;
-							});
+							var lastProcessedBusId = data[0].id;
+							var goingPhase = true;
+							
+							$.each(data, 
+								function(k,busStop) {
+									
+									if ( k != 0){
+										if (lastProcessedBusId != busStop.id){
+											lastProcessedBusId = busStop.id;
+										}
+										else{
+											goingPhase = false;
+										}
+									}
+									
+									if ( (direction === "going") && goingPhase ){
+										//console.log("inserting going stop");
+										insertMaker(busStop)
+									}
+									if ( (direction === "return") && !goingPhase ){
+										//console.log("inserting return stop");
+										insertMaker(busStop);
+									}
+								}
+							);
 							
 							// centering map
 							mymap.fitBounds([
@@ -98,13 +143,17 @@
 							
 							polyline.addTo(mymap);
 							mymap.addLayer(polyline);
+							
 						}
 						//display error message
 						else {
 							console.log("error");
 						}
+						
+						// showing direction buttons
+						document.getElementById("direction-buttons").style.visibility = "visible";
 					},
-
+	
 					//If there was no resonse from the server
 					error : function(jqXHR, textStatus, errorThrown) {
 						console.log("Something really bad happened " + textStatus);
@@ -112,12 +161,22 @@
 				});
 			});
 	});
+
+	function setGoingDirection(){
+		direction = "going";
+		
+	}
+
+	function setReturnDirection(){
+		direction = "return";	
+	}
+	
 </script>
 
 <script type="text/javascript">
 	function clickOnMarker(e, stopName, stopId){
 		var popup = e.target.getPopup();		
-		console.log("clicked on bus stop: " + stopId);
+		//console.log("clicked on bus stop: " + stopId);
 		
 		$.ajax({
 			url : '/Lab2/StopRequest',
@@ -130,16 +189,16 @@
 			success : function(data, textStatus, jqXHR) {
 				//our country code was correct so we have some information to display
 				if (data.length > 0) {
-					console.log("success");
+					//console.log("success");
 					
 					//console.log(data);
-					var popupContent = "<b>" + stopName + "<b><br>Other lines:<br>";
+					var popupContent = "<b>" + stopId + ": " + stopName + "<b><br>Other lines:<br>";
 					$.each(data, function(k,busLine) {
 						//console.log(busLine.line);
 						popupContent = popupContent.concat(busLine.line + "<br>");
 					});
 					
-					console.log("content: " + popupContent);
+					//console.log("content: " + popupContent);
 					
 					popup.setContent( popupContent );
                     popup.update();
@@ -147,7 +206,7 @@
 				}
 				//display error message
 				else {
-					console.log("error");
+					console.log("error retrieving data from server");
 				}
 			},
 
@@ -205,7 +264,7 @@
 							<%}else{
 								
 								for(BusLine busLine: busLines){%>
-							<tr id=<%= busLine.getLine() %>>
+							<tr value=<%= busLine.getLine() %>>
 								<td ><%=busLine.getLine() %></td>
 								<td><%=busLine.getDescription() %></td>
 							</tr>
@@ -229,6 +288,17 @@
 						<div class="map" id="mapid"></div>
 					</div>
 				</div>
+			</div>
+
+			<div class ="col-lg-6 col-md-6" id="direction-buttons">
+			  <div class="btn-group btn-group-justified" role="group" aria-label="...">
+				  <div class="btn-group" role="group">
+				    <button type="button" class="btn btn-default" onclick="setGoingDirection()" id="going-button" value="">Going</button>
+				  </div>
+				  <div class="btn-group" role="group">
+				    <button type="button" class="btn btn-default" onclick="setReturnDirection()" id="return-button" value="">Return</button>
+				  </div>
+			  </div>
 			</div>
 		</div>
 	</div>

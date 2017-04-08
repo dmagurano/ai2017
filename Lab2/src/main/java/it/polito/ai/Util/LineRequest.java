@@ -42,8 +42,10 @@ public class LineRequest extends HttpServlet {
 		
 		ArrayList<BusStop> busStops = (ArrayList<BusStop>) lm.getLineStops(selectedLine);
 		
-		for (BusStop bs : busStops)
+		System.out.println("stops:");
+		for (BusStop bs : busStops){
 			bs.setBusLines(null);
+		}
 		
 		Gson gson = new Gson();
 		

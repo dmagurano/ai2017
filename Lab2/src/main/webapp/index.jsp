@@ -32,6 +32,7 @@
 	
 	$(function() {
 		var bid, trid;
+		
 		$('#lines tr')
 			.click(function() {
 				trid = $(this).attr('id'); // table row ID
@@ -64,7 +65,11 @@
 								pointList.push(curPoint);
 								
 								var marker = L.marker([busStop.lat, busStop.lng]).addTo(mymap)
-									.bindPopup("<b>"+ busStop.name +"</b>");
+									.bindPopup() // in order to modify popup content
+									.on("click", function(e){
+										clickOnMarker(e, busStop.name, busStop.id)
+									});
+								
 								markers.push(marker);
 								mymap.addLayer(marker);
 
@@ -109,6 +114,50 @@
 	});
 </script>
 
+<script type="text/javascript">
+	function clickOnMarker(e, stopName, stopId){
+		var popup = e.target.getPopup();		
+		console.log("clicked on bus stop: " + stopId);
+		
+		$.ajax({
+			url : '/Lab2/StopRequest',
+			type : 'GET',
+			data : {
+				'selected_stop' : stopId,
+			},
+			dataType : 'json',
+
+			success : function(data, textStatus, jqXHR) {
+				//our country code was correct so we have some information to display
+				if (data.length > 0) {
+					console.log("success");
+					
+					//console.log(data);
+					var popupContent = "<b>" + stopName + "<b><br>Other lines:<br>";
+					$.each(data, function(k,busLine) {
+						//console.log(busLine.line);
+						popupContent = popupContent.concat(busLine.line + "<br>");
+					});
+					
+					console.log("content: " + popupContent);
+					
+					popup.setContent( popupContent );
+                    popup.update();
+
+				}
+				//display error message
+				else {
+					console.log("error");
+				}
+			},
+
+			//If there was no resonse from the server
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log("Something really bad happened " + textStatus);
+			}
+		});
+	}
+</script>
 
 </head>
 <body>

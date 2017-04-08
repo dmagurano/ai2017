@@ -29,7 +29,7 @@ public class LineManager {
 		List<BusStop> busStops = new ArrayList<BusStop>();
 				
 		for (Object o : HibernateUtil.getSessionFactory().getCurrentSession()
-			.createQuery("select bls.busStop from BusLineStop bls where bls.busLine.id = :line")
+			.createQuery("select bls.busStop from BusLineStop bls where bls.busLine.id = :line order by bls.seqencenumber")
 			.setParameter("line", line)
 			.list()){
 			busStops.add((BusStop) o);

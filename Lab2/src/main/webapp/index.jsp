@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="it.polito.ai.Util.LineManager"
 	import="java.util.List, it.polito.ai.Lab2.Entities.BusLine"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -12,39 +12,35 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/index_style.css">
 
 <!-- These tags are for leaflet. If I don't do this, the javascript execution in div map_container doesn't work -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
-<style type="text/css">
-#mapid {
-	height: 500px;
-	width: 500px;
-}
-</style>
+<link rel="stylesheet" href="css/index_style.css">
 
 <script type="text/javascript">
 	var mymap;
 	var polyline;
+	var markers = [];
+	
+	window.onload = function(){
+		// initializing map
+		mymap = L.map('mapid').setView([45.07, 7.69], 13);
+		L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGF2cjA5MTAiLCJhIjoiY2owemk4N2FmMDJ1ZzMzbno3YjZxZDN3YyJ9.eJdGDM0goIVXcFmMrQX8og').addTo(mymap);
+	}
 	
 	$(function() {
 		var bid, trid;
-		$('#lines td')
+		$('#lines tr')
 			.click(function() {
 				trid = $(this).attr('id'); // table row ID
-
-				//console.log(trid);
-				//alert(trid);
-				//$.get("/Lab2/LineRequest");
-				//window.location.replace("/Lab2/LineRequest");
+				
 				$.ajax({
 					url : '/Lab2/LineRequest',
 					type : 'GET',
 					data : {
 						'selected_line' : trid,
-					//'parameter2' : 'another value'
 					},
 					dataType : 'json',
 
@@ -53,42 +49,42 @@
 						if (data.length > 0) {
 							console.log("success");
 							
-							if (typeof mymap == 'undefined'){
-								// initializing map
-								mymap = L.map('mapid').setView([45.07, 7.69], 12);
-							
-								L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGF2cjA5MTAiLCJhIjoiY2owemk4N2FmMDJ1ZzMzbno3YjZxZDN3YyJ9.eJdGDM0goIVXcFmMrQX8og').addTo(mymap);
-							}
-							else{
-								// clearing map
-							    for(i in mymap._layers) {
-							        if(mymap._layers[i]._path != undefined) {
-							            try {
-							            	mymap.removeLayer(mymap._layers[i]);
-							            }
-							            catch(e) {
-							                console.log("problem with " + e + mymap._layers[i]);
-							            }
-							        }
-							    }
-							}
-							
-							//var marker = L.marker([45.07, 7.69]).addTo(mymap);
-							// marker.bindPopup("<b>You are hacked!</b><br>I am a popup.").openPopup();
+							// clearing map
+							for (i=0;i<markers.length;i++)
+								mymap.removeLayer(markers[i]);
+							if (typeof polyline !== 'undefined')
+								mymap.removeLayer(polyline);
 							
 							var pointList = [];
+							var marker
+							var min_lat = 90, max_lat = -90, min_lng = 180, max_lng = -180;
+							
 							$.each(data, function(k,busStop) {
-								//console.log(v);
-								/*
-								console.log(busStop.name)
-								console.log(busStop.lat)
-								console.log(busStop.lng)
-								*/
 								var curPoint = new L.LatLng(busStop.lat, busStop.lng);
 								pointList.push(curPoint);
+								
+								var marker = L.marker([busStop.lat, busStop.lng]).addTo(mymap)
+									.bindPopup("<b>"+ busStop.name +"</b>");
+								markers.push(marker);
+								mymap.addLayer(marker);
+
+								if (busStop.lat < min_lat)
+									min_lat = busStop.lat;
+								if (busStop.lat > max_lat)
+									max_lat = busStop.lat;								
+								if (busStop.lng < min_lng)
+									min_lng = busStop.lng;
+								if (busStop.lng > max_lng)
+									max_lng = busStop.lng;
 							});
 							
-							var polyline = new L.Polyline(pointList, {
+							// centering map
+							mymap.fitBounds([
+									[max_lat, max_lng],
+									[min_lat, min_lng]
+							]);
+							
+							polyline = new L.Polyline(pointList, {
 							    color: 'blue',
 							    weight: 5,
 							    opacity: 0.5,
@@ -96,23 +92,7 @@
 							});
 							
 							polyline.addTo(mymap);
-							
-							/*circle.bindPopup("I am a circle.");
-							polygon.bindPopup("I am a polygon.");
-							
-							var circle = L.circle([45.07, 7.69], {
-							    color: 'red',
-							    fillColor: '#f03',
-							    fillOpacity: 0.5,
-							    radius: 500
-							}).addTo(mymap);
-							
-							var polygon = L.polygon([
-							    [45.05, 7.31],
-							    [45.044, 7.29],
-							    [45.06, 7.16]
-							]).addTo(mymap);
-							*/
+							mymap.addLayer(polyline);
 						}
 						//display error message
 						else {
@@ -125,34 +105,6 @@
 						console.log("Something really bad happened " + textStatus);
 					}
 				});
-				/*
-				 var a = $.ajax({
-				 //The URL to process the request
-				 'url' : '/Lab2/LineRequest',
-				 //The type of request, also known as the "method" in HTML forms
-				 //Can be 'GET' or 'POST'
-				 'type' : 'GET',
-				 //Any post-data/get-data parameters
-				 //This is optional
-				 'data' : {
-				 'selected_line' : trid,
-				 //'parameter2' : 'another value'
-				 }
-				 });
-				 a.done(function(msg) {
-				 $("#map_container").load("map.jsp");
-
-				 //				$("#map_container").html(msg);
-				 //				$("#mapid").find("script").each(function(i) {				
-				 //					console.log("entered");
-				 //					eval($(this).text());
-				 //				});				
-				 });
-
-				 // TODO a.fail() 
-
-				 //window.location.replace("/Lab2/LineRequest");
-				 */
 			});
 	});
 </script>
@@ -161,11 +113,14 @@
 </head>
 <body>
 	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
+		<div class="row">		
+			<div class="col-lg-6 col-md-6">
+			
 				<div class="panel panel-primary">
 					<div class="panel-heading">
+						
 						<h3 class="panel-title">Lines</h3>
+						
 						<div class="pull-right">
 							<a class="thumbnail pull-left" href="#"> <img
 								class="media-object"
@@ -173,17 +128,20 @@
 								style="width: 32px; height: 32px;">
 							</a>
 						</div>
-
+						
 					</div>
 					<!-- 
 					<div class="panel-body">
 						<input type="text" class="form-control" id="dev-table-filter" data-action="filter" data-filters="#dev-table" placeholder="search line" />
 					</div>
 					 -->
-					<table class="table table-hover" id="lines">
+					 
+					<div class="lines-table-collapse col-lg-12">
+						<table class="table table-hover table-collapse" id="lines">
 						<thead>
 							<tr>
-								<th>Line Name</th>
+								<th>Line</th>
+								<th>Description</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -193,13 +151,14 @@
 							   if(busLines.size() == 0){
 							%>
 							<tr>
-								<td>Lines not found</td>
+								<td>No lines found</td>
 							</tr>
 							<%}else{
 								
 								for(BusLine busLine: busLines){%>
-							<tr>
-								<td id=<%= busLine.getLine() %>>Line <%=busLine.getLine() %></td>
+							<tr id=<%= busLine.getLine() %>>
+								<td ><%=busLine.getLine() %></td>
+								<td><%=busLine.getDescription() %></td>
 							</tr>
 							<%		
 								}
@@ -208,10 +167,20 @@
 
 						</tbody>
 					</table>
+				  	</div>
+				  	
 				</div>
 			</div>
+			<!--
 			<div class="col-md-6" id="map_container"></div>
-			<div class="col-md-6" id="mapid"></div>
+			-->
+			<div class="col-lg-6 col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="map" id="mapid"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

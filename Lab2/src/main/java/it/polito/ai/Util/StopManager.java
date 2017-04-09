@@ -13,7 +13,7 @@ public class StopManager {
 		List<BusLine> busLines = new ArrayList<BusLine>();
 				
 		for (Object o : HibernateUtil.getSessionFactory().getCurrentSession()
-			.createQuery("select bls.busLine from BusLineStop bls where bls.busStop.id = :busStop")
+			.createQuery("select distinct bls.busLine from BusLineStop bls where bls.busStop.id = :busStop")
 			.setParameter("busStop", busStop)
 			.list()){
 			busLines.add((BusLine) o);

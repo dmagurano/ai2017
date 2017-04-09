@@ -22,158 +22,13 @@
 <script type="text/javascript">
 	var lineId;
 	var mymap;
-	var polyline;
+	var polylineGoing,  polylineReturn;
 	var markers = [];
-	var direction = "return";
-	var pointList = [];
+	var direction = "going";
+	var requestedDirection = "all";
+	var pointListGoing = [], pointListReturn = [];
 	var min_lat, max_lat, min_lng, max_lng;
 	
-	function insertMaker(busStop){
-		//console.log(busStop.id);
-		
-		var curPoint = new L.LatLng(busStop.lat, busStop.lng);
-		pointList.push(curPoint);
-		
-		var marker = L.marker([busStop.lat, busStop.lng]).addTo(mymap)
-			.bindPopup() // in order to modify popup content
-			.on("click", function(e){
-				clickOnMarker(e, busStop.name, busStop.id)
-			});
-		
-		markers.push(marker);
-		mymap.addLayer(marker);
-
-		if (busStop.lat < min_lat)
-			min_lat = busStop.lat;
-		if (busStop.lat > max_lat)
-			max_lat = busStop.lat;								
-		if (busStop.lng < min_lng)
-			min_lng = busStop.lng;
-		if (busStop.lng > max_lng)
-			max_lng = busStop.lng;
-	}
-		
-	$(function() {
-		//console.log("entered $(function(){})");
-		
-		// hiding direction-buttons
-		/*
-		element.style.visibility = 'hidden';      // Hide
-		element.style.visibility = 'visible';     // Show
-		*/
-		document.getElementById("direction-buttons").style.visibility = "hidden";
-		// initializing map
-		mymap = L.map('mapid').setView([45.07, 7.69], 13);
-		L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGF2cjA5MTAiLCJhIjoiY2owemk4N2FmMDJ1ZzMzbno3YjZxZDN3YyJ9.eJdGDM0goIVXcFmMrQX8og').addTo(mymap);
-		
-		$('#lines tr, #going-button, #return-button')
-			.click(function() {
-				//console.log("entered $('#lines tr').click(function() {})");
-				
-				lineId = $(this).attr('value');
-				
-				//console.log(this.tagName);
-				if (this.tagName === "TR"){
-					direction = "going";
-					document.getElementById("going-button").value = lineId;
-					document.getElementById("return-button").value = lineId;
-				}
-				
-				$.ajax({
-					url : '/Lab2/LineRequest',
-					type : 'GET',
-					data : {
-						'selected_line' : lineId,
-					},
-					dataType : 'json',
-	
-					success : function(data, textStatus, jqXHR) {
-						//our country code was correct so we have some information to display
-						if (data.length > 0) {
-							console.log("success");
-							
-							// clearing map
-							for (i=0;i<markers.length;i++)
-								mymap.removeLayer(markers[i]);
-							if (typeof polyline !== 'undefined')
-								mymap.removeLayer(polyline);
-							
-							pointList = [];
-							min_lat = 90; max_lat = -90; min_lng = 180; max_lng = -180;
-							var marker;
-							
-							var lastProcessedBusId = data[0].id;
-							var goingPhase = true;
-							
-							$.each(data, 
-								function(k,busStop) {
-									
-									if ( k != 0){
-										if (lastProcessedBusId != busStop.id){
-											lastProcessedBusId = busStop.id;
-										}
-										else{
-											goingPhase = false;
-										}
-									}
-									
-									if ( (direction === "going") && goingPhase ){
-										//console.log("inserting going stop");
-										insertMaker(busStop)
-									}
-									if ( (direction === "return") && !goingPhase ){
-										//console.log("inserting return stop");
-										insertMaker(busStop);
-									}
-								}
-							);
-							
-							// centering map
-							mymap.fitBounds([
-									[max_lat, max_lng],
-									[min_lat, min_lng]
-							]);
-							
-							polyline = new L.Polyline(pointList, {
-							    color: 'blue',
-							    weight: 5,
-							    opacity: 0.5,
-							    smoothFactor: 1
-							});
-							
-							polyline.addTo(mymap);
-							mymap.addLayer(polyline);
-							
-						}
-						//display error message
-						else {
-							console.log("error");
-						}
-						
-						// showing direction buttons
-						document.getElementById("direction-buttons").style.visibility = "visible";
-					},
-	
-					//If there was no resonse from the server
-					error : function(jqXHR, textStatus, errorThrown) {
-						console.log("Something really bad happened " + textStatus);
-					}
-				});
-			});
-	});
-
-	function setGoingDirection(){
-		direction = "going";
-		
-	}
-
-	function setReturnDirection(){
-		direction = "return";	
-	}
-	
-</script>
-
-<script type="text/javascript">
 	function clickOnMarker(e, stopName, stopId){
 		var popup = e.target.getPopup();		
 		//console.log("clicked on bus stop: " + stopId);
@@ -192,7 +47,7 @@
 					//console.log("success");
 					
 					//console.log(data);
-					var popupContent = "<b>" + stopId + ": " + stopName + "<b><br>Other lines:<br>";
+					var popupContent = "<b>" + stopId + " " + stopName + "<b><br>Other lines:<br>";
 					$.each(data, function(k,busLine) {
 						//console.log(busLine.line);
 						popupContent = popupContent.concat(busLine.line + "<br>");
@@ -216,6 +71,171 @@
 			}
 		});
 	}
+	
+	function updateMap(busStop){
+		var marker = L.marker([busStop.lat, busStop.lng]).addTo(mymap)
+			.bindPopup() // in order to modify popup content
+			.on("click", function(e){
+				clickOnMarker(e, busStop.name, busStop.id)
+		});
+	
+		markers.push(marker);
+		mymap.addLayer(marker);
+	}
+	
+	function insertMaker(busStop){
+		var curPoint = new L.LatLng(busStop.lat, busStop.lng);
+		
+		//console.log(requestedDirection);
+		
+		if (requestedDirection === "all"){
+			if (direction === "going"){
+				pointListGoing.push(curPoint);
+				updateMap(busStop);
+			}
+			else{
+				pointListReturn.push(curPoint);
+				updateMap(busStop);
+			}
+		}
+		else{
+			if (requestedDirection === "going" && direction === "going"){
+				pointListGoing.push(curPoint);
+				updateMap(busStop);
+			}
+			
+			if (requestedDirection === "return" && direction === "return"){
+				pointListReturn.push(curPoint);
+				updateMap(busStop);
+			}
+		}
+
+		if (busStop.lat < min_lat)
+			min_lat = busStop.lat;
+		if (busStop.lat > max_lat)
+			max_lat = busStop.lat;								
+		if (busStop.lng < min_lng)
+			min_lng = busStop.lng;
+		if (busStop.lng > max_lng)
+			max_lng = busStop.lng;
+	}
+		
+	$(function() {
+		// hiding direction buttons
+		document.getElementById("direction-buttons").style.visibility = "hidden";
+		// initializing map
+		mymap = L.map('mapid').setView([45.07, 7.69], 13);
+		L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGF2cjA5MTAiLCJhIjoiY2owemk4N2FmMDJ1ZzMzbno3YjZxZDN3YyJ9.eJdGDM0goIVXcFmMrQX8og').addTo(mymap);
+		
+		$('#lines tr, #going-button, #return-button')
+			.click(function() {
+				
+				lineId = $(this).attr('value');
+				
+				//console.log(this.tagName);
+				if (this.tagName === "TR"){
+					requestedDirection = "all";
+				}
+				else{
+					//console.log(this.id);
+					if ((this.id) === "going-button")
+						requestedDirection = "going";
+					else
+						requestedDirection = "return";
+				}
+				
+				document.getElementById("going-button").value = lineId;
+				document.getElementById("return-button").value = lineId;
+				
+				$.ajax({
+					url : '/Lab2/LineRequest',
+					type : 'GET',
+					data : {
+						'selected_line' : lineId,
+					},
+					dataType : 'json',
+	
+					success : function(data, textStatus, jqXHR) {
+						//our country code was correct so we have some information to display
+						if (data.length > 0) {
+							//console.log("success");
+
+							// clearing map from markers
+							for (i=0;i<markers.length;i++)
+								mymap.removeLayer(markers[i]);
+							// clearing map from lines
+							if (typeof polylineGoing !== 'undefined')
+								mymap.removeLayer(polylineGoing);
+							if (typeof polylineReturn !== 'undefined')
+								mymap.removeLayer(polylineReturn);
+
+							pointListGoing = [];
+							pointListReturn = [];
+							min_lat = 90; max_lat = -90; min_lng = 180; max_lng = -180;
+							direction = "going";
+							
+							var firstBusId = data[0].id;
+							var lastProcessedBusId = firstBusId;
+							var goingPhase = true;
+							
+							$.each(data, 
+								function(k,busStop) {
+									
+									if ( k != 0){
+										if (busStop.id === lastProcessedBusId)
+											direction = "return";
+										else
+											lastProcessedBusId = busStop.id;
+									}
+									insertMaker(busStop);
+								}
+							);
+							
+							// centering map
+							mymap.fitBounds([
+									[max_lat, max_lng],
+									[min_lat, min_lng]
+							]);
+							
+							// filling map
+							polylineGoing = new L.Polyline(pointListGoing, {
+							    color: 'green',
+							    weight: 5,
+							    opacity: 0.5,
+							    smoothFactor: 1
+							});
+
+							polylineReturn = new L.Polyline(pointListReturn, {
+							    color: 'blue',
+							    weight: 5,
+							    opacity: 0.5,
+							    smoothFactor: 1
+							});
+
+							polylineGoing.addTo(mymap);
+							polylineReturn.addTo(mymap);
+							mymap.addLayer(polylineGoing);
+							mymap.addLayer(polylineReturn);
+							
+						}
+						//display error message
+						else {
+							console.log("error");
+						}
+						
+						// showing direction buttons
+						document.getElementById("direction-buttons").style.visibility = "visible";
+					},
+	
+					//If there was no resonse from the server
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log("Something really bad happened " + textStatus);
+					}
+				});
+			});
+	});
+
+	
 </script>
 
 </head>
@@ -293,10 +313,10 @@
 			<div class ="col-lg-6 col-md-6" id="direction-buttons">
 			  <div class="btn-group btn-group-justified" role="group" aria-label="...">
 				  <div class="btn-group" role="group">
-				    <button type="button" class="btn btn-default" onclick="setGoingDirection()" id="going-button" value="">Going</button>
+				    <button type="button" class="btn btn-success" id="going-button" value="">Going</button>
 				  </div>
 				  <div class="btn-group" role="group">
-				    <button type="button" class="btn btn-default" onclick="setReturnDirection()" id="return-button" value="">Return</button>
+				    <button type="button" class="btn btn-info" id="return-button" value="">Return</button>
 				  </div>
 			  </div>
 			</div>

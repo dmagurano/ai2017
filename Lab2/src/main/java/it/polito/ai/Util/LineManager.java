@@ -14,7 +14,7 @@ public class LineManager {
 		List<BusLine> busLines = new ArrayList<BusLine>();
 		
 		for (Object bl : HibernateUtil.getSessionFactory().getCurrentSession()
-				.createQuery("from BusLine bl").list())
+				.createQuery("from BusLine bl order by bl.id").list())
 			busLines.add((BusLine)bl);
 
 		// System.out.println("exiting LineManager.getAllLines()");

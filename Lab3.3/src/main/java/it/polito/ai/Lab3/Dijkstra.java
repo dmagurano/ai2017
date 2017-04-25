@@ -2,15 +2,18 @@ package it.polito.ai.Lab3;
 
 
 import java.util.*;
+
+import org.apache.commons.collections4.map.MultiKeyMap;
  
 public class Dijkstra {
 	
    
    
-   private static List<Edge> setEdges(){
+   private static MultiKeyMap<String,Edge> setEdges(){
 	   
 	   //Read from class Edge to create Edges of graph
-	   List<Edge> edges = new ArrayList<Edge>();
+	   MultiKeyMap<String,Edge> edges = new MultiKeyMap<String,Edge>();
+	   
 	   Edge e1 = new Edge();
 	   Edge e2 = new Edge();
 	   Edge e3 = new Edge();
@@ -48,15 +51,15 @@ public class Dijkstra {
 	   e9.setIdDestination("f");
 	   e9.setCost(9);
 	   
-	   edges.add(e1);
-	   edges.add(e2);
-	   edges.add(e3);
-	   edges.add(e4);
-	   edges.add(e5);
-	   edges.add(e6);
-	   edges.add(e7);
-	   edges.add(e8);
-	   edges.add(e9);
+	   edges.put(e1.getIdSource(),e1.getIdDestination(),e1);
+	   edges.put(e2.getIdSource(),e2.getIdDestination(),e2);
+	   edges.put(e3.getIdSource(),e3.getIdDestination(),e3);
+	   edges.put(e4.getIdSource(),e4.getIdDestination(),e4);
+	   edges.put(e5.getIdSource(),e5.getIdDestination(),e5);
+	   edges.put(e6.getIdSource(),e6.getIdDestination(),e6);
+	   edges.put(e7.getIdSource(),e7.getIdDestination(),e7);
+	   edges.put(e8.getIdSource(),e8.getIdDestination(),e8);
+	   edges.put(e9.getIdSource(),e9.getIdDestination(),e9);
 	   return edges;
 	   
 	   
@@ -66,11 +69,11 @@ public class Dijkstra {
    private static final String END = "d";
  
    public static void main(String[] args) {
-      /*Graph g = new Graph(setEdges());
+      Graph g = new Graph(setEdges());
       g.dijkstra(START);
       g.printPath(END);
       //g.printAllPaths();
-      System.out.println("Cost " + g.getCost() );
+      /*System.out.println("Cost " + g.getCost() );
       for(String s : g.getPath()){
     	  System.out.println(s);
       }

@@ -70,9 +70,9 @@ public class Dijkstra {
  
    public static void main(String[] args) {
       Graph g = new Graph(setEdges());
-      g.dijkstra(START);
-      g.printPath(END);
-      //g.printAllPaths();
+      g.dijkstra("b");
+      //g.printPath(END);
+      g.printAllPaths("b");
       /*System.out.println("Cost " + g.getCost() );
       for(String s : g.getPath()){
     	  System.out.println(s);

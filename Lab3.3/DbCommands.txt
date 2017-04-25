@@ -1,0 +1,15 @@
+MongoDB:
+
+- Accessing to the shell in container bash through follow command: mongo --shell
+- In the mongo shell do follow command to show all dbs: show dbs
+- Accessing on db through follow command: use db_name
+- Show all collections of db through command: show collections
+- Show all documents of collection through command: db.collection_name.find()
+- Drop db (after accessing to the specific db) through command: db.dropDatabase()
+
+Postgrs/Postgis:
+- Accessing to db in container bash through follow command: psql -d db_name -U username
+- Example of queries:
+    SELECT * FROM buslinestop;
+    SELECT ST_DISTANCE(src.location, dst.location) FROM GeoBusStop src, GeoBusStop dst WHERE src.id='10' AND dst.id='958';
+    SELECT * FROM GeoBusStop WHERE ST_DWithin(location,'POINT(7.65728 45.09583)',250);

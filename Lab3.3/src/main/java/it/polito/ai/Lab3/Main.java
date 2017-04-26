@@ -251,47 +251,45 @@ public class Main {
 	      System.out.println("Graph created...");
 	      System.out.println("Calculate minPaths...");
 	      
-	      //2.2 Calculate for each stop the min path toward the other stops 
-	      List<Document> minPaths = new ArrayList<Document>();
-	      int i = 1;
-	      for(String stop : stops ){
-	    	  //System.out.println("for stop "+stop);
-	    	  graph.dijkstra(stop);
-	    	  List<Document> mPath = graph.printAllPaths(stop);
-			  	  	
-	    	  minPaths.addAll(mPath);
-	    	  
-	    	  System.out.println(i+"/3722"+" stop "+stop);
-	    	  i++;
-	    	  
-	      }
-	      
-	      System.out.println("MinPath calculated");
-	      
 	      MongoClient mongoClient = null;
-			try{
-				MongoClientURI connectionStr = new 	MongoClientURI("mongodb://localhost:27017");
-				mongoClient = new MongoClient(connectionStr);
+	      
+	      try{
+	    	  
+	    	  MongoClientURI connectionStr = new 	MongoClientURI("mongodb://localhost:27017");
+			  mongoClient = new MongoClient(connectionStr);
+			  
+              //Connect to db
+			  MongoDatabase database = mongoClient.getDatabase("MinPathsDB"); 
 				
-				//Connect to db
-				MongoDatabase database = mongoClient.getDatabase("MinPathsDB"); 
+			  //Do operations here
 				
-				//Do operations here
+			  //Create collection
+			  MongoCollection<Document> collection = database.getCollection("MinPaths");
 				
-				//Create collection
-				MongoCollection<Document> collection = database.getCollection("MinPaths");
 				
-				collection.insertMany(minPaths);
-				
-				System.out.println("MinPaths stored");
-				
-			}catch(Exception e){
+	      
+			  //2.2 Calculate for each stop the min path toward the other stops 
+			  //List<Document> minPaths = new ArrayList<Document>();
+			  int i = 1;
+			  for(String stop : stops ){
+				  //System.out.println("for stop "+stop);
+				  graph.dijkstra(stop);
+				  collection.insertMany(graph.printAllPaths(stop));
+			  	  	    	  
+				  System.out.println(i+"/3722"+" stop "+stop);
+				  i++;
+	    	  
+			  }
+	      
+			  System.out.println("MinPath calculated");
+	      	
+		}catch(Exception e){
 				mongoClient.close();
-			}finally{
+		}finally{
 				mongoClient.close();
-			}
+		}
 			
-
+	      System.out.println("MinPaths stored");
 	}
 
 }

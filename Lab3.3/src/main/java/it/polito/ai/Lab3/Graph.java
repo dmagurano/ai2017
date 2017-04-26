@@ -103,7 +103,7 @@ public class Graph {
 	      //another pass to set neighbouring vertices
 	      for (Map.Entry<MultiKey<? extends String>, Edge> e : edges.entrySet()) {
 	         graph.get(e.getValue().getIdSource()).neighbours.put(graph.get(e.getValue().getIdDestination()), e.getValue().getCost());
-	         graph.get(e.getValue().getIdDestination()).neighbours.put(graph.get(e.getValue().getIdSource()), e.getValue().getCost()); // also do this for an undirected graph
+	         //graph.get(e.getValue().getIdDestination()).neighbours.put(graph.get(e.getValue().getIdSource()), e.getValue().getCost()); // also do this for an undirected graph
 	      }
 	   }
 	 

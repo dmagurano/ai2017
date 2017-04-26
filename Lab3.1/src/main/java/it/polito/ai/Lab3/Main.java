@@ -2,6 +2,9 @@ package it.polito.ai.Lab3;
 
 import java.sql.*;
 
+import org.postgresql.util.PSQLException;
+
+
 public class Main {
 	private static PreparedStatement preparedStatementBusStop = null;
 	private static PreparedStatement preparedStatementGeoBusStop = null;
@@ -21,7 +24,7 @@ public class Main {
 		try {
 			conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/trasporti", "postgres", "ai-user-password");
 		}
-		catch (org.postgresql.util.PSQLException e){
+		catch (PSQLException e){
 			// probably mattia's pc? :)
 			conn = DriverManager.getConnection("jdbc:postgresql://192.168.99.100:5432/trasporti", "postgres", "ai-user-password");				
 		}

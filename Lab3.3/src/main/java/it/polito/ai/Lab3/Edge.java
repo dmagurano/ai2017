@@ -28,6 +28,9 @@ public class Edge {
 	 * */
 	private int cost;
 	
+	private String edgeLine;
+	
+	
 	public String getIdSource() {
 		return idSource;
 	}
@@ -51,5 +54,11 @@ public class Edge {
 	}
 	public void setCost(int cost) {
 		this.cost = cost;
+	}
+	public String getEdgeLine() {
+		return edgeLine;
+	}
+	public void setEdgeLine(String edgeLine) {
+		this.edgeLine = edgeLine;
 	}
 }

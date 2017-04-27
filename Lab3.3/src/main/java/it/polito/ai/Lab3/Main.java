@@ -136,6 +136,7 @@ public class Main {
 		    					  .setParameter("s1",s1).setParameter("d1",d1).list().get(0);
 		    			  edge1.setCost(cost.intValue());
 		    			  edge1.setMode(false);
+		    			  edge1.setEdgeLine(line);
 		    			  edges.put(s1,d1,edge1);
 		    			  
 		    			  //writer.println(s1+" -> "+d1+", ");
@@ -159,6 +160,7 @@ public class Main {
 	    					  .setParameter("s2",s2).setParameter("d2",d2).list().get(0);
 	    			  edge2.setCost(cost.intValue());
 	    			  edge2.setMode(false);
+	    			  edge2.setEdgeLine(line);
 	    			  edges.put(s2,d2,edge2);
 	    			  
 	    			  //writer.println(s2+" -> "+d2+", ");
@@ -177,6 +179,7 @@ public class Main {
 		    		  .setParameter("source",source).setParameter("destination",destination).list().get(0);
 		    		  edge.setCost(cost.intValue());
 		    		  edge.setMode(false);
+		    		  edge.setEdgeLine(line);
 		    		  edges.put(source,destination,edge);
 		    		  
 		    		  //writer.println(source+" -> "+destination+", ");
@@ -216,6 +219,7 @@ public class Main {
 		    		  cost *= walkOnFoot;
 		    		  edge.setCost(cost.intValue());
 		    		  edge.setMode(true);
+		    		  edge.setEdgeLine(null);
 		    		  edges.put(stop,aroundStop,edge);
 		    		  
 		    		  //writer.println("near: "+stop+" -> "+aroundStop+", ");

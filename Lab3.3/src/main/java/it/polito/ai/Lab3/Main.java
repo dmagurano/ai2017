@@ -222,6 +222,7 @@ public class Main {
 		    		  edge.setEdgeLine(null);
 		    		  edges.put(stop,aroundStop,edge);
 		    		  
+		    		  
 		    		  //writer.println("near: "+stop+" -> "+aroundStop+", ");
 		    	  }
 		      }

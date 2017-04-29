@@ -13,18 +13,22 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoDatabase;
+
 /**
  * Servlet Filter implementation class HibernateSessionRequestFilter
  */
 @WebFilter("/*")
-public class HibernateSessionRequestFilter implements Filter {
+public class MongoFilter implements Filter {
 
-	private static SessionFactory sf = HibernateUtil.getSessionFactory();
+	
 
 	/**
 	 * Default constructor.
 	 */
-	public HibernateSessionRequestFilter() {
+	public MongoFilter() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -41,33 +45,13 @@ public class HibernateSessionRequestFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		Session s = sf.getCurrentSession();
-		Transaction tx = null;
-
-		try {
-			tx = s.beginTransaction();
-			//request.setAttribute("hibernate-session", s);
-			
-			// doing operations
-			chain.doFilter(request, response);
-			
-			tx.commit();
-
-		} catch (Throwable ex) {
-
-			if (tx != null)
-				tx.rollback();
-			throw new ServletException(ex);
-
-		} finally {
-
-			if (s != null && s.isOpen())
-				s.close();
-			s = null;
-
-		}
-
+		request.setAttribute("mongodb", MongoDbUtil.getDb());
+		
+		// doing operations
+		chain.doFilter(request, response);
 	}
+	
+	
 
 	/**
 	 * @see Filter#init(FilterConfig)

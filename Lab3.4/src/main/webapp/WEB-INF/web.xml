@@ -14,6 +14,16 @@
   	<filter-name>HibernateSessionRequestFilter</filter-name>
   	<url-pattern>/HibernateSessionRequestFilter</url-pattern>
   </filter-mapping>
+  <filter>
+  	<filter-name>MongoFilter</filter-name>
+  	<display-name>MongoFilter</display-name>
+  	<description></description>
+  	<filter-class>it.polito.ai.Util.MongoFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>MongoFilter</filter-name>
+  	<url-pattern>/MongoFilter</url-pattern>
+  </filter-mapping>
   <servlet>
   	<servlet-name>ProvaDB</servlet-name>
   	<display-name>ProvaDB</display-name>

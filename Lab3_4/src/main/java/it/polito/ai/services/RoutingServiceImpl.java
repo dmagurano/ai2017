@@ -42,6 +42,8 @@ public class RoutingServiceImpl implements RoutingService {
 	    		.createQuery("from GeoBusStop bs where dwithin(bs.location,:point," + ratio + ") = true")
 	    		.setParameter("point", point).list())
 	    	src_gstops.add((GeoBusStop) o);
+	    if(src_gstops.isEmpty()) // no path can be found
+	    	return null;
 	    // 2) search the stops around the dst
  		// build the point in wkt format POINT(lng lat)
  		wktPoint = new String("POINT(" + dLng + " " + dLat + ")");
@@ -53,6 +55,8 @@ public class RoutingServiceImpl implements RoutingService {
  	    		.createQuery("from GeoBusStop bs where dwithin(bs.location,:point," + ratio + ") = true")
  	    		.setParameter("point", point).list())
  	    	dst_gstops.add((GeoBusStop) o);
+ 	   if(dst_gstops.isEmpty()) // no path can be found
+	    	return null;
 	    // 3) search the best path
  	    // query example
  	    /*
@@ -70,11 +74,11 @@ public class RoutingServiceImpl implements RoutingService {
  	    // add the src conditions
  	    List<Bson> sFilters = new ArrayList<Bson>();
  	    for (GeoBusStop s: src_gstops)
- 	    	sFilters.add(Filters.eq("\"" + s.getName() + "\""));
+ 	    	sFilters.add(Filters.eq("idSource", "" + s.getId()));
  	    // add the dst conditions
  	    List<Bson> dFilters = new ArrayList<Bson>();
  	    for (GeoBusStop d: dst_gstops)
- 	    	dFilters.add(Filters.eq("\"" + d.getName() + "\""));
+ 	    	dFilters.add(Filters.eq("idDestination", "" + d.getId()));
 		// compose the final filter
  	    Bson resFilter = Filters.and(Filters.or(sFilters), Filters.or(dFilters));
  	    // execute the query

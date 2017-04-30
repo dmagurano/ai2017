@@ -2,6 +2,7 @@ package it.polito.ai.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -40,7 +41,8 @@ public class CalculatePath extends HttpServlet {
 
 		
 		Gson gson = new Gson();
-		
+		if(edges == null)
+			edges = new ArrayList<Edge>();
 		String busStopsJson = gson.toJson(edges);
 		
 		response.setContentType("application/json");

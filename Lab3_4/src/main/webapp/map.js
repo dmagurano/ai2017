@@ -153,7 +153,7 @@
 			if(srcLat != undefined)
 			{
 				$.ajax({
-					url : '/Lab3/CalculatePath',
+					url : '/Lab3_4/CalculatePath',
 					type : 'GET',
 					data : 
 					{

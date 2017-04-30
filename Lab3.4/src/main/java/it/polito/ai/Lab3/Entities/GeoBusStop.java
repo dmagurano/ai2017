@@ -4,10 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 @Entity
-@Table(name="busstop")
+@Table(name="geobusstop")
 public class GeoBusStop implements Serializable{
 	
 	// NOTE: no foreign key depency in the db
@@ -18,6 +20,7 @@ public class GeoBusStop implements Serializable{
 	@Column(nullable=false)
 	private String name;
 	
+	@Type(type="org.hibernate.spatial.GeometryType")
 	private Geometry location;
 
 	public String getId() {

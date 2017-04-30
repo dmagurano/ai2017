@@ -13,12 +13,12 @@
 	function onMapClick(e){
 		if (selectingSrc) {
 			srcLat = e.latlng.lat;
-			srcLon = e.latlng.lon;
+			srcLon = e.latlng.lng;
 			selectingSrc = false;
 			$('#statusText').html(stringDst);
 		} else {
 			dstLat = e.latlng.lat;
-			dstLon = e.latlng.lon;
+			dstLon = e.latlng.lng;
 			$('#statusText').html(stringDone);
 		}
 	}
@@ -139,6 +139,7 @@
 		mymap.on('click', onMapClick);
 		
 		$('#cancelBtn').click(function() {
+			$('#statusText').html(stringSrc);
 			selectingSrc = true;
 			// clearing map from markers
 		for (i=0;i<markers.length;i++)
@@ -149,19 +150,15 @@
 		} );
 		
 		$('#findBtn').click(function() {
-			$.ajax({
-					url : '/Lab3.4/RoutingRequest',
+			if(srcLat != undefined)
+			{
+				$.ajax({
+					url : '/Lab3/CalculatePath',
 					type : 'GET',
 					data : 
 					{
-						'src' : { 
-								  'lat' : srcLat ,
-								  'lon' : srcLon 
-								},
-						'dst' : { 
-								  'lat' : dstLat,
-								  'lon' : dstLon
-								}		  
+						src : srcLat + ',' + srcLon,
+						dst : dstLat + ',' + dstLon
 					},
 					dataType : 'json',
 	
@@ -223,7 +220,8 @@
 					error : function(jqXHR, textStatus, errorThrown) {
 						console.log("Something really bad happened " + textStatus);
 					}
-				});
+				  });
+				}
 			});
 	});
 	

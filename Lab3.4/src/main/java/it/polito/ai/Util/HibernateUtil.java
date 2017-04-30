@@ -11,6 +11,7 @@ import org.hibernate.service.ServiceRegistry;
 import it.polito.ai.Lab3.Entities.BusLine;
 import it.polito.ai.Lab3.Entities.BusLineStop;
 import it.polito.ai.Lab3.Entities.BusStop;
+import it.polito.ai.Lab3.Entities.GeoBusStop;
 
 public class HibernateUtil {
 	
@@ -36,6 +37,7 @@ public class HibernateUtil {
     			.addAnnotatedClass(BusLine.class)
     			.addAnnotatedClass(BusLineStop.class)
     			.addAnnotatedClass(BusStop.class)
+    			.addAnnotatedClass(GeoBusStop.class)
     			.getMetadataBuilder()
     			.applyImplicitNamingStrategy(ImplicitNamingStrategyJpaCompliantImpl.INSTANCE)
     			.build();

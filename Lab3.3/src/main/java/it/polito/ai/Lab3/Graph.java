@@ -67,7 +67,8 @@ public class Graph {
 				Document doc = new Document("idSource",found.getIdSource())
 							       .append("idDestination", found.getIdDestination())
 							       .append("mode", found.isMode())
-							       .append("cost", found.getCost());
+							       //.append("cost", found.getCost())
+							       .append("line", found.getEdgeLine());
 				minPath.add(doc);
 				sourcePoint = this.name;
 					
@@ -171,10 +172,12 @@ public class Graph {
 	    	 
 	    	 v.printPath();
 	    	 
+	    	 List<Document> mP = new ArrayList<Document>(minPath);
+	    	 
 	    	 Document minPathDoc = new Document("idSource",src)
 			           .append("idDestination", sourcePoint)
 			           .append("totalCost", totCost)
-			           .append("edges", minPath);
+			           .append("edges", mP);
 			  
 	    	 
 	    	 minPathForSrc.add(minPathDoc);

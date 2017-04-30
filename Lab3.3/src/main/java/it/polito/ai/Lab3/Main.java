@@ -276,20 +276,22 @@ public class Main {
 			  //2.2 Calculate for each stop the min path toward the other stops 
 			  //List<Document> minPaths = new ArrayList<Document>();
 			  int i = 1;
-			  for(String stop : stops ){
+			  List<Document> chunk = new ArrayList<Document>();
+			  //for(String stop : stops )
+			  for(i=0; i != stops.size(); i++) //ciclo normale perchè ogni tanto si bloccava e bisognava ripartire da un certo i
+			  {
 				  //System.out.println("for stop "+stop);
+				  String stop = stops.get(i);
 				  graph.dijkstra(stop);
-				  collection.insertMany(graph.printAllPaths(stop));
-			  	  	    	  
-				  System.out.println(i+"/3722"+" stop "+stop);
-				  i++;
-				 
-	    	  
+				  chunk = graph.printAllPaths(stop);
+				  collection.insertMany(chunk);
+				  
 			  }
 	      
 			  System.out.println("MinPath calculated");
 	      	
 		}catch(Exception e){
+				e.printStackTrace();
 				mongoClient.close();
 		}finally{
 				mongoClient.close();
@@ -297,5 +299,7 @@ public class Main {
 			
 	      System.out.println("MinPaths stored");
 	}
+	
+	
 
 }

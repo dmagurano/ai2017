@@ -126,13 +126,13 @@
 		mymap.addLayer(marker);
 		
 		if (point.lat < min_lat)
-			min_lat = busStop.lat;
+			min_lat = point.lat;
 		if (point.lat > max_lat)
-			max_lat = busStop.lat;								
+			max_lat = point.lat;								
 		if (point.lng < min_lng)
-			min_lng = busStop.lng;
+			min_lng = point.lng;
 		if (point.lng > max_lng)
-			max_lng = busStop.lng;
+			max_lng = point.lng;
 	}
 		
 	$(function() {

@@ -10,6 +10,7 @@
 	var stringDst = 'Click on the map to select destination point';
 	var stringDone = 'Press Calculate to find the best path';
 	
+	
 	function onMapClick(e){
 		if (selectingSrc) {
 			srcLat = e.latlng.lat;
@@ -100,6 +101,7 @@
 
 			//If there was no resonse from the server
 			error : function(jqXHR, textStatus, errorThrown) {
+				
 				console.log("Something really bad happened " + textStatus);
 			}
 		});
@@ -171,7 +173,7 @@
 			//reactivate click event
 			mymap.on('click', onMapClick);
 			$('#path-info').hide();
-			$('#table').html('<tbody></tbody>');
+			$('#path').html('<tbody></tbody>');
 		
 		} );
 		
@@ -236,7 +238,8 @@
 						}
 						//display error message
 						else {
-							console.log("error");
+							$('#errorMsg').html('Path not found');
+							$('#errorModal').modal('show');
 						}
 						
 						// showing direction buttons
@@ -245,10 +248,14 @@
 	
 					//If there was no resonse from the server
 					error : function(jqXHR, textStatus, errorThrown) {
+						$('#errorMsg').html('Server Error');
+						$('#errorModal').modal('show');
 						console.log("Something really bad happened " + textStatus);
 					}
-				  });
-				}
-			});
+				});
+				
+				
+			}
+		});
 	});
 	

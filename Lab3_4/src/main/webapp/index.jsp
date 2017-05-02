@@ -42,35 +42,19 @@
 
 			<div class="second col-lg-6 col-md-6">
 				<div class="row">
-					<button type="button" id="findBtn" class="btn btn-default col-xs-7 ">Find
-						Path</button>
+					<button type="button" id="findBtn" class="btn btn-default col-xs-7 ">Calculate</button>
 					<button type="button" id="cancelBtn"
 						class="btn btn-default col-xs-4 pull-right">Restart</button>
 				</div>
 
-				<div class="row">
+				<div id="path-info" class="row">
 					<div style="margin-top: 20px" class="panel panel-default">
 						<div class="panel-heading">
-							<h3 style="text-align: center" class="panel-title">Path info</h3>
+							<h3 style="text-align: center" class="panel-title">PATH INFO</h3>
 						</div>
 						<div class="panel-body">
 							<table class="table table-hover table-striped" id="path">
-								<thead>
-									<tr>
-										<th>Line</th>
-										<th>Description</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>No lines found</td>
-										<td>pollo</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td></td>
-									</tr>
-								</tbody>
+							<tbody></tbody>
 							</table>
 						</div>
 					</div>

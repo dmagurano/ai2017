@@ -134,10 +134,24 @@
 		if (point.lng > max_lng)
 			max_lng = point.lng;
 	}
+	
+	function insertLine(edge){
+		//Try to get tbody first with jquery children. works faster!
+		var tbody = $('#path').children('tbody');
+
+		//Then if no tbody just select your table 
+		var table = tbody.length ? tbody : $('#path');
+		
+		var line = edge.mode ? 'walking' : edge.edgeLine;
+
+		//Add row
+		table.append('<tr><td>'+edge.cost+' m</td><td>'+line+'</td></tr>');
+	}
 		
 	$(function() {
 		
 		$('#statusText').html(stringSrc);
+		$('#path-info').hide();
 		
 		// initializing map
 		mymap = L.map('mapid').setView([45.07, 7.69], 13);
@@ -156,6 +170,8 @@
 				mymap.removeLayer(polylines[i]);
 			//reactivate click event
 			mymap.on('click', onMapClick);
+			$('#path-info').hide();
+			$('#table').html('<tbody></tbody>');
 		
 		} );
 		
@@ -176,7 +192,7 @@
 						//our country code was correct so we have some information to display
 						if (data.length > 0) {
 							//console.log("success");
-
+							$('#path-info').show();	
 							// clearing map from markers
 							for (i=0;i<markers.length;i++)
 								mymap.removeLayer(markers[i]);
@@ -203,6 +219,7 @@
 							$.each(data, 
 								function(k,edge) {
 									insertEdge(edge);
+									insertLine(edge);
 								}
 							);
 							

@@ -109,7 +109,7 @@ public class RoutingServiceImpl implements RoutingService {
  	    	
  	        Edge edge = new Edge();
  	    	edge.setCost(d.getInteger("cost"));
- 	    	edge.setEdgeLine(d.getString("edgeLine"));
+ 	    	edge.setEdgeLine(d.getString("line"));
  	    	edge.setIdDestination(idDst);
  	    	edge.setIdSource(idSrc);
  	    	edge.setLatSrc(bsSrc.getLat());

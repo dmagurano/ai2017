@@ -20,7 +20,7 @@
 			dstLat = e.latlng.lat;
 			dstLon = e.latlng.lng;
 			$('#statusText').html(stringDone);
-			map.off('click', onClick);
+			mymap.off('click', onClick);
 		}
 		
 		var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap)

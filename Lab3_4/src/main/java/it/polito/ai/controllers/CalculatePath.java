@@ -31,7 +31,9 @@ public class CalculatePath extends HttpServlet {
 		// supposed parameters: src="lat,lng"&dst="lat,lng"
 		String[] src = request.getParameter("src").split(",");
 		String[] dst = request.getParameter("dst").split(",");
-	
+		
+		long start = System.currentTimeMillis();
+		
 		// get the path 
 		List<Edge> edges = rs.getPath(
 						Double.parseDouble(src[0]), Double.parseDouble(src[1]),
@@ -49,8 +51,10 @@ public class CalculatePath extends HttpServlet {
 		PrintWriter out = response.getWriter();  
 		out.print(busStopsJson);
 		out.flush();
+		
+		long end = System.currentTimeMillis();
 	
-		System.out.println("Path request served");
+		System.out.println("Path request served in "+ (end - start) + " ms");
 		
 	}
 

@@ -6,9 +6,9 @@
 	var min_lat, max_lat, min_lng, max_lng;
 	var srcLat, srcLon, dstLat, dstLon;
 	var selectingSrc = true;
-	var stringSrc = 'Click on the map to select source point';
+	var stringSrc = 'Click on the map to select start point';
 	var stringDst = 'Click on the map to select destination point';
-	var stringDone = 'Press Find Path to continue or cancel to restart';
+	var stringDone = 'Press Calculate to find the best path';
 	
 	function onMapClick(e){
 		if (selectingSrc) {
@@ -20,7 +20,12 @@
 			dstLat = e.latlng.lat;
 			dstLon = e.latlng.lng;
 			$('#statusText').html(stringDone);
+			map.off('click', onClick);
 		}
+		
+		var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap)
+		markers.push(marker);
+		mymap.addLayer(marker);
 	}
 	
 	function insertEdge(edge) {
@@ -111,20 +116,22 @@
 		mymap.addLayer(marker);
 	}
 	
-	function insertMaker(busStop){
-		var curPoint = new L.LatLng(busStop.lat, busStop.lng);
-		//console.log(requestedDirection);
+	function insertMaker(point){
+		var curPoint = new L.LatLng(point.lat, point.lng);
 		
 		pointList.push(curPoint);
-		updateMap(busStop);
 		
-		if (busStop.lat < min_lat)
+		var marker = L.marker([point.lat, point.lng]).addTo(mymap)
+		markers.push(marker);
+		mymap.addLayer(marker);
+		
+		if (point.lat < min_lat)
 			min_lat = busStop.lat;
-		if (busStop.lat > max_lat)
+		if (point.lat > max_lat)
 			max_lat = busStop.lat;								
-		if (busStop.lng < min_lng)
+		if (point.lng < min_lng)
 			min_lng = busStop.lng;
-		if (busStop.lng > max_lng)
+		if (point.lng > max_lng)
 			max_lng = busStop.lng;
 	}
 		
@@ -142,11 +149,14 @@
 			$('#statusText').html(stringSrc);
 			selectingSrc = true;
 			// clearing map from markers
-		for (i=0;i<markers.length;i++)
-			mymap.removeLayer(markers[i]);
-		// clearing map from lines
-		if (typeof polyline !== 'undefined')
-			mymap.removeLayer(polyline);
+			for (i=0;i<markers.length;i++)
+				mymap.removeLayer(markers[i]);
+			// clearing map from lines
+			for (i=0;i<polylines.length;i++)
+				mymap.removeLayer(polylines[i]);
+			//reactivate click event
+			mymap.on('click', onMapClick);
+		
 		} );
 		
 		$('#findBtn').click(function() {
@@ -180,13 +190,13 @@
 							
 							// inserting src & dst markers
 							var edgesSize = data.length;
-							var busStop = new Object();
-							busStop.lat = data[0].latSrc;
-							busStop.lng = data[0].lonSrc;
-							insertMaker(busStop);
-							busStop.lat = data[edgesSize-1].latDst;
-							busStop.lng = data[edgesSize-1].lonDst;
-							insertMaker(busStop);
+							var point = new Object();
+							point.lat = data[0].latSrc;
+							point.lng = data[0].lonSrc;
+							insertMaker(point);
+							point.lat = data[edgesSize-1].latDst;
+							point.lng = data[edgesSize-1].lonDst;
+							insertMaker(point);
 							
 							// inserting edges
 							

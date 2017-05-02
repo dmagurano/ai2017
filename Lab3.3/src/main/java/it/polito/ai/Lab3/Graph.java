@@ -67,7 +67,7 @@ public class Graph {
 				Document doc = new Document("idSource",found.getIdSource())
 							       .append("idDestination", found.getIdDestination())
 							       .append("mode", found.isMode())
-							       //.append("cost", found.getCost())
+							       .append("cost", found.getCost())
 							       .append("line", found.getEdgeLine());
 				minPath.add(doc);
 				sourcePoint = this.name;

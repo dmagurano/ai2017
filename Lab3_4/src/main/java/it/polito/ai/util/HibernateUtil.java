@@ -29,7 +29,7 @@ public class HibernateUtil {
     			.applySetting(Environment.DIALECT, "org.hibernate.spatial.dialect.postgis.PostgisDialect")
     			.applySetting(Environment.HBM2DDL_AUTO, "validate")
     			.applySetting(Environment.FORMAT_SQL, "true")
-    			.applySetting(Environment.SHOW_SQL, "true")
+    			.applySetting(Environment.SHOW_SQL, "false")
     			.applySetting(Environment.CURRENT_SESSION_CONTEXT_CLASS,"thread")
     			.build();
     	

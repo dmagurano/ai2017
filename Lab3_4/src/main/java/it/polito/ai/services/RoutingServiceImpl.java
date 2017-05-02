@@ -25,7 +25,9 @@ public class RoutingServiceImpl implements RoutingService {
 	
 	private static int ratio = 250;
 	
-	private Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+	/* remember to create MongoDb index:
+	 *  db.MinPaths.createIndex( { "idSource": 1, "idDestination": 1 } )
+	 */
 	
 	public List<Edge> getPath(Double sLat, Double sLng, Double dLat, Double dLng) {
 		// 0) check the validity of the params
@@ -82,7 +84,11 @@ public class RoutingServiceImpl implements RoutingService {
 		// compose the final filter
  	    Bson resFilter = Filters.and(Filters.or(sFilters), Filters.or(dFilters));
  	    // execute the query
+ 	    long start = System.currentTimeMillis();
  	    List<Document> query_res = c.find(resFilter).sort(sort).limit(1).into(new ArrayList<Document>());
+ 	    long end = System.currentTimeMillis();
+ 	    System.out.println("Mongo query took " + (end - start) + " ms");
+ 	    
  	    if (query_res.isEmpty())
  	    	return null; // no path found!
  	    Document best_doc = query_res.get(0);
@@ -98,8 +104,8 @@ public class RoutingServiceImpl implements RoutingService {
  	    	String idDst = d.getString("idDestination");
  	    	String idSrc = d.getString("idSource");
  	    	
- 	    	BusStop bsSrc = (BusStop) s.load(BusStop.class, idSrc);
- 	    	BusStop bsDst = (BusStop) s.load(BusStop.class, idDst);
+ 	    	BusStop bsSrc = (BusStop) HibernateUtil.getSessionFactory().getCurrentSession().load(BusStop.class, idSrc);
+ 	    	BusStop bsDst = (BusStop) HibernateUtil.getSessionFactory().getCurrentSession().load(BusStop.class, idDst);
  	    	
  	        Edge edge = new Edge();
  	    	edge.setCost(d.getInteger("cost"));

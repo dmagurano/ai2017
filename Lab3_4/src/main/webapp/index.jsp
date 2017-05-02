@@ -22,7 +22,7 @@
 
 <link rel="stylesheet" href="css/index_style.css">
 
-<script src="map.js"></script>
+<script type="text/javascript" src="map.js"></script>
 
 
 </head>

@@ -249,12 +249,11 @@ public class Main {
 	    System.out.println("Edges built...");
 	      
 	      //2.1 Create graph
-	      System.out.println("Create graph...");
-	      
-	      
+	      System.out.println("Creating graph...");      
 	      Graph graph = new Graph(edges);
-	      System.out.println("Graph created...");
-	      System.out.println("Calculate minPaths...");
+	      System.out.println("Graph created.");
+	      
+	      System.out.println("Calculating minPaths...");
 	      
 	      MongoClient mongoClient = null;
 	      
@@ -289,7 +288,7 @@ public class Main {
 				  System.out.println(i+"/3722"+" stop "+stop);
 			  }
 	      
-			  System.out.println("MinPath calculated");
+			  System.out.println("MinPaths calculated");
 	      	
 		}catch(Exception e){
 				e.printStackTrace();
@@ -298,7 +297,7 @@ public class Main {
 				mongoClient.close();
 		}
 			
-	      System.out.println("MinPaths stored");
+	      System.out.println("MinPaths stored.");
 	}
 	
 	

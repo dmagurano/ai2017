@@ -34,6 +34,7 @@ public class RoutingServiceImpl implements RoutingService {
 		if (sLng < -180.0 || sLng > 180.0 || sLat < -90.0 || sLat > 90.0 
 				|| dLng < -180.0 || dLng > 180.0 || dLat < -90.0 || dLat > 90.0)
 			return null;
+		
 		// 1) search the stops around the src
 		// build the point in wkt format POINT(lng lat)
 		String wktPoint = new String("POINT(" + sLng + " " + sLat + ")");
@@ -46,6 +47,7 @@ public class RoutingServiceImpl implements RoutingService {
 	    	src_gstops.add((GeoBusStop) o);
 	    if(src_gstops.isEmpty()) // no path can be found
 	    	return null;
+	    
 	    // 2) search the stops around the dst
  		// build the point in wkt format POINT(lng lat)
  		wktPoint = new String("POINT(" + dLng + " " + dLat + ")");
@@ -59,6 +61,7 @@ public class RoutingServiceImpl implements RoutingService {
  	    	dst_gstops.add((GeoBusStop) o);
  	   if(dst_gstops.isEmpty()) // no path can be found
 	    	return null;
+ 	   
 	    // 3) search the best path
  	    // query example
  	    /*

@@ -9,27 +9,70 @@
 	var stringSrc = 'Click on the map to select start point';
 	var stringDst = 'Click on the map to select destination point';
 	var stringDone = 'Press Calculate to find the best path';
-	
+	var markerType;
+	// https://github.com/pointhi/leaflet-color-markers
+	var greenIcon = new L.Icon({
+		  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+		  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+		  iconSize: [25, 41],
+		  iconAnchor: [12, 41],
+		  popupAnchor: [1, -34],
+		  shadowSize: [41, 41]
+	});
 	
 	function onMapClick(e){
+		//console.log("clicked on map");
+		var marker;
+		
 		if (selectingSrc) {
+			//console.log("selected source");
 			srcLat = e.latlng.lat;
 			srcLon = e.latlng.lng;
 			selectingSrc = false;
 			$('#statusText').html(stringDst);
+			marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
 		} else {
+			//console.log("selected destination");
 			dstLat = e.latlng.lat;
 			dstLon = e.latlng.lng;
 			$('#statusText').html(stringDone);
 			mymap.off('click', onMapClick);
+			marker = L.marker([e.latlng.lat, e.latlng.lng], {icon: greenIcon}).addTo(mymap)
 		}
 		
-		var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap)
+		markers.push(marker);
+		mymap.addLayer(marker);	
+	}
+
+	function insertMaker(point, type){
+		//console.log("> inserting marker ...");
+		var curPoint = new L.LatLng(point.lat, point.lng);
+		var marker;
+		
+		pointList.push(curPoint);
+		
+		if (markerType === "src")
+			marker = L.marker([point.lat, point.lng]).addTo(mymap)
+		else
+			marker = L.marker([point.lat, point.lng], {icon: greenIcon}).addTo(mymap)
+		
 		markers.push(marker);
 		mymap.addLayer(marker);
+		
+		if (point.lat < min_lat)
+			min_lat = point.lat;
+		if (point.lat > max_lat)
+			max_lat = point.lat;								
+		if (point.lng < min_lng)
+			min_lng = point.lng;
+		if (point.lng > max_lng)
+			max_lng = point.lng;
+		
+		//console.log("> marker inserted");
 	}
 	
 	function insertEdge(edge) {
+		//console.log(">> inserting edge ...");
 		var polyline;
 		var srcPoint = new L.LatLng(edge.latSrc, edge.lonSrc);
 		var dstPoint = new L.LatLng(edge.latDst, edge.lonDst);
@@ -59,8 +102,67 @@
 		
 		polyline.addTo(mymap);
 		mymap.addLayer(polyline);
-		polylines.push(polyline);
+		polylines.push(polyline);	
 		
+		//console.log(">> edge inserted.");
+	}
+	
+	function insertLine(edge){
+		//Try to get tbody first with jquery children. works faster!
+		var tbody = $('#path').children('tbody');
+
+		//Then if no tbody just select your table 
+		var table = tbody.length ? tbody : $('#path');
+		
+		var line = edge.mode ? 'walking' : edge.edgeLine;
+
+		//Add row
+		table.append('<tr><td>'+edge.cost+' m</td><td>'+line+'</td></tr>');
+	}
+	
+	function insertLine(line, cost){
+		//Try to get tbody first with jquery children. works faster!
+		var tbody = $('#path').children('tbody');
+
+		//Then if no tbody just select your table 
+		var table = tbody.length ? tbody : $('#path');
+
+		//Add row
+		table.append('<tr><td>'+cost+' m</td><td>'+line+'</td></tr>');
+	}
+	
+	function insertLines(data){
+		// setting initial status
+		var lastLine = data[0].mode ? 'walking' : data[0].edgeLine;
+		var lastCost = data[0].cost;
+		// number of bus stops on the same line
+		// to be used if it is necessary
+		var lastStopsCount = 0;
+		
+		var subData = data.slice(1, -1);
+		$.each(subData, 
+			function(k,edge) {
+				var currentLine = edge.mode ? 'walking' : edge.edgeLine;
+			
+				if (currentLine === lastLine){
+					// updating status
+					lastCost += edge.cost;
+					lastStopsCount++;
+				}	
+				else{
+					// inserting row in table
+					insertLine(lastLine, lastCost);
+					
+					// resetting status
+					lastLine = currentLine;
+					lastCost = edge.cost
+					lastStopsCount = 0;
+				}
+			}
+		);
+
+		// inserting last row in table
+		insertLine(lastLine, lastCost);
 	}
 	
 	function clickOnMarker(e, stopName, stopId){
@@ -88,7 +190,16 @@
 					});
 					
 					//console.log("content: " + popupContent);
+
 					
+					var greenIcon = new L.Icon({
+						  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+						  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+						  iconSize: [25, 41],
+						  iconAnchor: [12, 41],
+						  popupAnchor: [1, -34],
+						  shadowSize: [41, 41]
+					});
 					popup.setContent( popupContent );
                     popup.update();
 
@@ -116,38 +227,6 @@
 	
 		markers.push(marker);
 		mymap.addLayer(marker);
-	}
-	
-	function insertMaker(point){
-		var curPoint = new L.LatLng(point.lat, point.lng);
-		
-		pointList.push(curPoint);
-		
-		var marker = L.marker([point.lat, point.lng]).addTo(mymap)
-		markers.push(marker);
-		mymap.addLayer(marker);
-		
-		if (point.lat < min_lat)
-			min_lat = point.lat;
-		if (point.lat > max_lat)
-			max_lat = point.lat;								
-		if (point.lng < min_lng)
-			min_lng = point.lng;
-		if (point.lng > max_lng)
-			max_lng = point.lng;
-	}
-	
-	function insertLine(edge){
-		//Try to get tbody first with jquery children. works faster!
-		var tbody = $('#path').children('tbody');
-
-		//Then if no tbody just select your table 
-		var table = tbody.length ? tbody : $('#path');
-		
-		var line = edge.mode ? 'walking' : edge.edgeLine;
-
-		//Add row
-		table.append('<tr><td>'+edge.cost+' m</td><td>'+line+'</td></tr>');
 	}
 		
 	$(function() {
@@ -203,6 +282,9 @@
 							if (typeof polyline !== 'undefined')
 								mymap.removeLayer(polylines[i]);
 							}
+							// clearing PATH INFO TABLE
+							$('#path').html('<tbody></tbody>');
+							
 							pointList= [];
 							min_lat = 90; max_lat = -90; min_lng = 180; max_lng = -180;
 							
@@ -211,30 +293,33 @@
 							var point = new Object();
 							point.lat = data[0].latSrc;
 							point.lng = data[0].lonSrc;
+							
+							// inserting src
+							markerType = "src";
 							insertMaker(point);
+							
 							point.lat = data[edgesSize-1].latDst;
 							point.lng = data[edgesSize-1].lonDst;
+							
+							// inserting dst
+							markerType = "dst";
 							insertMaker(point);
 							
 							// inserting edges
-							
 							$.each(data, 
 								function(k,edge) {
 									insertEdge(edge);
-									insertLine(edge);
 								}
 							);
+							
+							// populating path info table
+							insertLines(data);
 							
 							// centering map
 							mymap.fitBounds([
 									[max_lat, max_lng],
 									[min_lat, min_lng]
 							]);
-							
-							
-
-							
-							
 						}
 						//display error message
 						else {

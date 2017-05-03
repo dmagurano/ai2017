@@ -38,10 +38,7 @@ public class CalculatePath extends HttpServlet {
 		List<Edge> edges = rs.getPath(
 						Double.parseDouble(src[0]), Double.parseDouble(src[1]),
 						Double.parseDouble(dst[0]), Double.parseDouble(dst[1]));
-		
-		
 
-		
 		Gson gson = new Gson();
 		if(edges == null)
 			edges = new ArrayList<Edge>();

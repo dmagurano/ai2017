@@ -45,7 +45,6 @@
 	}
 
 	function insertMaker(point, type){
-		//console.log("> inserting marker ...");
 		var curPoint = new L.LatLng(point.lat, point.lng);
 		var marker;
 		
@@ -71,16 +70,12 @@
 			min_lng = point.lng;
 		if (point.lng > max_lng)
 			max_lng = point.lng;
-		
-		//console.log("> marker inserted");
 	}
 	
 	function insertEdge(edge) {
-		//console.log(">> inserting edge ...");
 		var polyline;
 		var srcPoint = new L.LatLng(edge.latSrc, edge.lonSrc);
 		var dstPoint = new L.LatLng(edge.latDst, edge.lonDst);
-		//console.log(requestedDirection);
 		var pointList = [];
 		pointList.push(srcPoint);
 		pointList.push(dstPoint);
@@ -107,9 +102,28 @@
 		
 		polyline.addTo(mymap);
 		mymap.addLayer(polyline);
-		polylines.push(polyline);	
+		polylines.push(polyline);
+	}
+	
+	function insertOnFootEdge(edge, type){
+		console.log("inserting on foot " + type + " edge: " + edge);
 		
-		//console.log(">> edge inserted.");
+		if ( type == "start" )
+			type = true;
+		else
+			type = false;
+		
+		var onFootEdge = new Object();
+		
+		onFootEdge.latSrc = type ? srcLat : edge.latDst;
+		onFootEdge.lonSrc = type ? srcLon : edge.lonDst;
+			
+		onFootEdge.latDst = type ? edge.latSrc : dstLat;
+		onFootEdge.lonDst = type ? edge.lonSrc : dstLon;
+			
+		onFootEdge.mode = true;
+		
+		insertEdge(onFootEdge);
 	}
 	
 	function insertLine(line, cost){
@@ -131,10 +145,14 @@
 		// to be used if it is necessary
 		var lastStopsCount = 0;
 		
+		console.log(data[0].cost + " " + lastLine);
+		
 		var subData = data.slice(1, -1);
 		$.each(subData, 
 			function(k,edge) {
 				var currentLine = edge.mode ? 'walking' : edge.edgeLine;
+
+				console.log(edge.cost + " " + currentLine);
 			
 				if (currentLine === lastLine){
 					// updating status
@@ -156,7 +174,7 @@
 		// inserting last row in table
 		insertLine(lastLine, lastCost);
 	}
-		
+	/*	
 	function clickOnMarker(e, stopName, stopId){
 		var popup = e.target.getPopup();		
 		//console.log("clicked on bus stop: " + stopId);
@@ -219,7 +237,7 @@
 		markers.push(marker);
 		mymap.addLayer(marker);
 	}
-		
+	*/	
 	$(function() {
 		
 		$('#statusText').html(stringSrc);
@@ -280,21 +298,23 @@
 							min_lat = 90; max_lat = -90; min_lng = 180; max_lng = -180;
 							
 							// inserting src & dst markers
-							var edgesSize = data.length;
 							var point = new Object();
-							point.lat = data[0].latSrc;
-							point.lng = data[0].lonSrc;
+							point.lat = srcLat;
+							point.lng = srcLon;
 							
 							// inserting src
 							markerType = "src";
 							insertMaker(point);
 							
-							point.lat = data[edgesSize-1].latDst;
-							point.lng = data[edgesSize-1].lonDst;
+							point.lat = dstLat;
+							point.lng = dstLon;
 							
 							// inserting dst
 							markerType = "dst";
 							insertMaker(point);
+							
+							// inserting on foot edge from src to first bus stop
+							insertOnFootEdge(data[0], "start");
 							
 							// inserting edges
 							$.each(data, 
@@ -302,7 +322,10 @@
 									insertEdge(edge);
 								}
 							);
-							
+
+							// inserting on foot edge from last bus stop to dst
+							insertOnFootEdge(data[data.length - 1], "finish");
+
 							// populating path info table
 							insertLines(data);
 							

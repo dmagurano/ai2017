@@ -8,7 +8,7 @@
 	var selectingSrc = true;
 	var stringSrc = 'Click on the map to select start point';
 	var stringDst = 'Click on the map to select destination point';
-	var stringDone = 'Press Calculate to find the best path';
+	var stringDone = 'Press Calculate to find the best path or press Reset';
 	var markerType;
 	// https://github.com/pointhi/leaflet-color-markers
 	var greenIcon = new L.Icon({
@@ -51,10 +51,14 @@
 		
 		pointList.push(curPoint);
 		
-		if (markerType === "src")
+		if (markerType === "src"){
 			marker = L.marker([point.lat, point.lng]).addTo(mymap)
-		else
+				.bindPopup("<b>Start<b>");
+		}
+		else{
 			marker = L.marker([point.lat, point.lng], {icon: greenIcon}).addTo(mymap)
+				.bindPopup("<b>Finish<b>");
+		}
 		
 		markers.push(marker);
 		mymap.addLayer(marker);
@@ -90,14 +94,15 @@
 							    smoothFactor: 1,
 								dashArray : "5, 10"
 							});
+			
 		} else {
 			polyline = new L.Polyline(pointList, {
 							    color: 'orange',
 							    weight: 5,
 							    opacity: 0.5,
 							    smoothFactor: 1
-							});
-			
+							})
+							.bindPopup("Line: <b>" + edge.edgeLine + "<b>");
 		}
 		
 		polyline.addTo(mymap);
@@ -105,19 +110,6 @@
 		polylines.push(polyline);	
 		
 		//console.log(">> edge inserted.");
-	}
-	
-	function insertLine(edge){
-		//Try to get tbody first with jquery children. works faster!
-		var tbody = $('#path').children('tbody');
-
-		//Then if no tbody just select your table 
-		var table = tbody.length ? tbody : $('#path');
-		
-		var line = edge.mode ? 'walking' : edge.edgeLine;
-
-		//Add row
-		table.append('<tr><td>'+edge.cost+' m</td><td>'+line+'</td></tr>');
 	}
 	
 	function insertLine(line, cost){
@@ -164,7 +156,7 @@
 		// inserting last row in table
 		insertLine(lastLine, lastCost);
 	}
-	
+		
 	function clickOnMarker(e, stopName, stopId){
 		var popup = e.target.getPopup();		
 		//console.log("clicked on bus stop: " + stopId);
@@ -191,7 +183,6 @@
 					
 					//console.log("content: " + popupContent);
 
-					
 					var greenIcon = new L.Icon({
 						  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
 						  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -331,7 +322,7 @@
 						//document.getElementById("direction-buttons").style.visibility = "visible";
 					},
 	
-					//If there was no resonse from the server
+					//If there was no response from the server
 					error : function(jqXHR, textStatus, errorThrown) {
 						$('#errorMsg').html('Server Error');
 						$('#errorModal').modal('show');

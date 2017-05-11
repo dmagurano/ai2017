@@ -10,8 +10,8 @@ public class Role implements GrantedAuthority {
 	private static final long serialVersionUID = 1L;
 	private String role;
 	
-	public Role (String r) {
-		this.role = r;
+	public Role (String role) {
+		this.role = role;
 	}
 
 	@Override

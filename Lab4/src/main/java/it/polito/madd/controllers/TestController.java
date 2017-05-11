@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
+import it.polito.madd.entities.Bike;
+import it.polito.madd.entities.Car;
 import it.polito.madd.entities.User;
 import it.polito.madd.services.SecurityService;
 import it.polito.madd.services.UserService;
@@ -51,6 +52,16 @@ public class TestController {
     	
     	boolean registered = true;
     	
+//    	user.setAge(18);
+//        user.setBikeUsage(new Bike(true,false));
+//        user.setCarSharing("Enjoy");
+//        user.setEducation("school");
+//        user.setGender("male");
+//        user.setJob("Student");
+//        user.setNickname("lollol");
+//        user.setOwnCar(new Car("1998","benzina"));
+//        user.setPubTransport("Annuale");
+    	
         if (!result.hasErrors()) {
             registered = createUserAccount(user, result);
         }
@@ -61,7 +72,11 @@ public class TestController {
         if (result.hasErrors()) {
             return "register";
         }
-
+        
+        
+        	
+        
+        
         securityService.autologin(user.getUsername(), user.getPassword());
 
         return "redirect:/welcome";

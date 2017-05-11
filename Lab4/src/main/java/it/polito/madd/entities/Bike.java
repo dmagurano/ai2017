@@ -2,6 +2,11 @@ package it.polito.madd.entities;
 
 public class Bike {
 	
+	public Bike(boolean owned, boolean sharing){
+		this.owned = owned;
+		this.sharing = sharing;
+	}
+	
 	private boolean owned;
 	
 	private boolean sharing;

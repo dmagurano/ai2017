@@ -29,10 +29,29 @@
             <div class="">
                 <a class="navbar-brand" th:href="@{/register}"  >Sign Up</a>
             </div>
-        </div>
-        <div class="navbar-collapse collapse navbar-right" sec:authorize="isAuthenticated()">
-            <a class="navbar-brand" th:href="@{/logout}"  >Logout</a>
-        </div>
+        	</div>
+<!--         <div class="navbar-collapse collapse navbar-right" sec:authorize="isAuthenticated()"> -->
+<!--             <a class="navbar-brand" th:href="@{/logout}"  >Logout</a> -->
+<!--         </div> -->
+
+		<ul class="nav navbar-nav navbar-right">
+<!--                 <li th:if="${#authorization.expression('!isAuthenticated()')}"> -->
+<!--                     <a href="/login" th:href="@{/login}"> -->
+<!--                         <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Sign in -->
+<!--                     </a> -->
+<!--                 </li> -->
+<!--                 <li th:if="${#authorization.expression('!isAuthenticated()')}"> -->
+<!--                     <a href="/register" th:href="@{/register}"> -->
+<!--                         Sign Up -->
+<!--                     </a> -->
+<!--                 </li> -->
+                <li sec:authorize="isAuthenticated()">
+                    <a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                    </a>
+                    <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
+                </li>
+            </ul>
 
     </div>
 </div>

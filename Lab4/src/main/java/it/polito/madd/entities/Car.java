@@ -2,6 +2,11 @@ package it.polito.madd.entities;
 
 public class Car {
 	
+	public Car(String registrationYear, String fuelType) {
+		this.registrationYear = registrationYear;
+		this.fuelType = fuelType;
+	}
+	
 	private String registrationYear;
 	
 	private String fuelType;

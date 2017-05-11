@@ -4,11 +4,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import it.polito.madd.validator.PasswordMatches;
+import it.polito.madd.validator.ValidEmail;
+
+@PasswordMatches
 public class User implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
@@ -16,38 +25,66 @@ public class User implements UserDetails {
 	@Id
 	private String id;
 	
-	@Field("email")
+	@ValidEmail
+	@NotNull
+	@NotEmpty
 	@Indexed(unique = true)
-	private EmailAddress emailAddress;
+	private String email;
 	
+	//TODO foto profilo
+	
+	@NotNull
+    @NotEmpty
+    @Size(min = 8, max= 36)
 	private String password;
+	
+	@NotNull
+    @NotEmpty
+	private String passwordConfirm;
 	
 	private List<Role> roles;
 	
+	@NotNull
+    @NotEmpty
 	private String nickname;
 	
+	@NotNull
+    @NotEmpty
 	private String gender;
 	
+	@NotNull
 	private int age;
 	
+	@NotNull
+    @NotEmpty
 	private String education;
 	
+	@NotNull
+    @NotEmpty
 	private String job;
 	
+	@NotNull
 	@Field("car")
 	private Car ownCar;
 	
+	@NotNull
+    @NotEmpty
 	private String carSharing;
 	
+	@NotNull
 	@Field("bike")
 	private Bike bikeUsage;
 	
+	@NotNull
+    @NotEmpty
 	private String pubTransport;
-	
-	
 
-	public User(EmailAddress emailAddress, String nickname) {
-		this.emailAddress = emailAddress;
+	public User() {
+		
+	}
+
+	public User(String email, String nickname) {
+		this.email = email;
 		this.nickname = nickname;
 	}
 
@@ -64,7 +101,11 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return this.emailAddress.toString();
+		return this.email;
+	}
+	
+	public void setUsername(String email) {
+		setEmail(email);
 	}
 
 	@Override
@@ -95,12 +136,12 @@ public class User implements UserDetails {
 		this.id = id;
 	}
 
-	public EmailAddress getEmailAddress() {
-		return emailAddress;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmailAddress(EmailAddress emailAddress) {
-		this.emailAddress = emailAddress;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getNickname() {
@@ -175,13 +216,19 @@ public class User implements UserDetails {
 		this.pubTransport = pubTransport;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	@Transient
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
 
 	public void setAuthorities(List<String> roles) {
 		this.roles = new ArrayList<Role>();

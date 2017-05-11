@@ -6,7 +6,7 @@ import it.polito.madd.entities.User;
 
 public interface UserRepository extends MongoRepository<User, String> {
 	
-	public User findByEmailAddress(String email);
+	public User findByEmail(String email);
 	
 
 }

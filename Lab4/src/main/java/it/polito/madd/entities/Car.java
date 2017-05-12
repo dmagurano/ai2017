@@ -1,21 +1,24 @@
 package it.polito.madd.entities;
 
 public class Car {
+	//TODO check errors into reg html
+	private Integer registrationYear;
+	private String fuelType;
 	
-	public Car(String registrationYear, String fuelType) {
+	public Car() {
+		
+	}
+	
+	public Car(Integer registrationYear, String fuelType) {
 		this.registrationYear = registrationYear;
 		this.fuelType = fuelType;
 	}
 	
-	private String registrationYear;
-	
-	private String fuelType;
-	
-	public String getRegistrationYear() {
+	public Integer getRegistrationYear() {
 		return registrationYear;
 	}
 
-	public void setRegistrationYear(String registrationYear) {
+	public void setRegistrationYear(Integer registrationYear) {
 		this.registrationYear = registrationYear;
 	}
 

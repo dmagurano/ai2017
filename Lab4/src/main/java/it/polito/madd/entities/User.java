@@ -63,12 +63,9 @@ public class User implements UserDetails {
     @NotEmpty
 	private String job;
 	
-	@NotNull
-	@Field("car")
+	//@Field("car")
 	private Car ownCar;
 	
-	@NotNull
-    @NotEmpty
 	private String carSharing;
 	
 	@NotNull
@@ -80,7 +77,8 @@ public class User implements UserDetails {
 	private String pubTransport;
 
 	public User() {
-		
+		ownCar = new Car();
+		bikeUsage = new Bike();
 	}
 
 	public User(String email, String nickname) {

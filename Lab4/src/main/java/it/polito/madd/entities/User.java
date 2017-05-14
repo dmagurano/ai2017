@@ -14,6 +14,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import it.polito.madd.validator.PasswordMatches;
 import it.polito.madd.validator.ValidEmail;
 
@@ -85,18 +87,20 @@ public class User implements UserDetails {
 		this.email = email;
 		this.nickname = nickname;
 	}
-
+	@JsonIgnore
 	@Override
 	public Collection<Role> getAuthorities() {
 		// TODO Auto-generated method stub
 		return this.roles;
 	}
-
+	
+	@JsonIgnore
 	@Override
 	public String getPassword() {
 		return this.password;
 	}
-
+	
+	@JsonIgnore
 	@Override
 	public String getUsername() {
 		return this.email;
@@ -105,27 +109,32 @@ public class User implements UserDetails {
 	public void setUsername(String email) {
 		setEmail(email);
 	}
-
+	
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return true;
 	}
 
+	@JsonIgnore
 	public String getId() {
 		return id;
 	}
@@ -134,6 +143,7 @@ public class User implements UserDetails {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public String getEmail() {
 		return email;
 	}
@@ -142,6 +152,7 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public String getNickname() {
 		return nickname;
 	}
@@ -219,6 +230,7 @@ public class User implements UserDetails {
 		this.password = password;
 	}
 	
+	@JsonIgnore
 	@Transient
     public String getPasswordConfirm() {
         return passwordConfirm;

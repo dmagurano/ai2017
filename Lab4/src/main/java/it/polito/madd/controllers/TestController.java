@@ -54,22 +54,20 @@ public class TestController {
     public String profile(Model model) {
     	
     	User currentUser = userService.findByEmail(securityService.findLoggedInUsername());
-    	User test = new User();
-    	test.setAge(11);
-    	test.setBikeUsage(new Bike(true,false));
-    	test.setCarSharing("Enjoy");
-    	test.setEducation("primary school");
-    	test.setEmail("pippo@a.it");
-    	test.setGender("male");
-    	test.setJob("no job");
-    	test.setNickname("Mr_Test");
-    	test.setOwnCar(new Car(1999,"diesel"));
-    	test.setPassword("ads");
-    	test.setPasswordConfirm("ads");
-    	test.setPubTransport("daily");
-    	/*
-    	 * 
-    	 */
+//    	User test = new User();
+//    	test.setAge(11);
+//    	test.setBikeUsage(new Bike(true,false));
+//    	test.setCarSharing("Enjoy");
+//    	test.setEducation("primary school");
+//    	test.setEmail("pippo@a.it");
+//    	test.setGender("male");
+//    	test.setJob("no job");
+//    	test.setNickname("Mr_Test");
+//    	test.setOwnCar(new Car(1999,"diesel"));
+//    	test.setPassword("ads");
+//    	test.setPasswordConfirm("ads");
+//    	test.setPubTransport("daily");
+//    	
     	model.addAttribute("user", currentUser);
         return "profile";
     }
@@ -92,7 +90,7 @@ public class TestController {
         
         securityService.autologin(user.getUsername(), user.getPassword());
 
-        return "redirect:/welcome";
+        return "redirect:profile";
     }
     
     private boolean createUserAccount(User user, BindingResult result) {

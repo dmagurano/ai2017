@@ -1,10 +1,16 @@
 package it.polito.madd.services;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+
 import it.polito.madd.entities.User;
 
 public interface UserService {
 	void registerNewUserAccount(User user) throws Exception;
 
     User findByEmail(String email);
+    public List<User> findAll();
+    public Page<User> findAll(Integer page, Integer per_page);
 
 }

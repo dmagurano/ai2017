@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,4 +49,20 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String username) {
         return userRepository.findByEmail(username);
     }
+
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public Page<User> findAll(Integer page, Integer per_page) {
+		PageRequest pageReq = new PageRequest(page,per_page);
+		Page<User> pageRes = userRepository.findAll(pageReq);
+		if (page > pageRes.getTotalPages())
+			return null;
+		//return pageRes.getContent();
+		return pageRes;
+	}
+
 }

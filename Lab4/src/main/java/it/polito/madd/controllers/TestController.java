@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import groovyjarjarasm.asm.commons.Method;
 import it.polito.madd.entities.Bike;
 import it.polito.madd.entities.Car;
 import it.polito.madd.entities.User;
@@ -48,6 +49,11 @@ public class TestController {
     public String test(Model model) {
     	model.addAttribute("user", new User());
         return "register";
+    }
+    
+    @RequestMapping(value = {"/chat"}, method = RequestMethod.GET)
+    public String chat(Model model) {
+    	return "chat";
     }
     
     @RequestMapping(value = {"/profile"}, method = RequestMethod.GET)

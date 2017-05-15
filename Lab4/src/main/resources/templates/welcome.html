@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Registration</title>
+<title>Home</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
 <link th:href="@{/css/custom-bootstrap.css}" rel="stylesheet"/>
@@ -17,9 +17,9 @@
 			<h2>Topics</h2>
 		</div>
 		<div class="list-group">
-			  <a href="#" class="list-group-item">Bus &amp; Metro</a>
-			  <a href="#" class="list-group-item">Traffic</a>
-			  <a href="#" class="list-group-item">Bike</a>
+			  <a href="/chat?topic=busSub" class="list-group-item">Bus &amp; Metro</a>
+			  <a href="/chat?topic=traffic" class="list-group-item">Traffic</a>
+			  <a href="/chat?topic=bike" class="list-group-item">Bike</a>
 		</div>
 	</div>
 	<div th:replace="fragments/footer"></div>

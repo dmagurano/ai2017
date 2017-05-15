@@ -8,9 +8,10 @@ import it.polito.madd.entities.User;
 
 public interface UserService {
 	void registerNewUserAccount(User user) throws Exception;
+	User findLoggedInUser();
 
     User findByEmail(String email);
-    public List<User> findAll();
-    public Page<User> findAll(Integer page, Integer per_page);
+    List<User> findAll();
+    Page<User> findAll(Integer page, Integer per_page);
 
 }

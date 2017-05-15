@@ -45,6 +45,12 @@
 <!--                         Sign Up -->
 <!--                     </a> -->
 <!--                 </li> -->
+				<li sec:authorize="isAuthenticated()">
+					<a href="/profile">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+						<span th:text="'&nbsp;'+${#authentication.name}">&nbsp;User</span>
+					</a>
+				</li>
                 <li sec:authorize="isAuthenticated()">
                     <a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout

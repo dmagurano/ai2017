@@ -21,4 +21,62 @@ public class Message {
 	
 	private Date timestamp;
 	
+	public Message() {
+		
+	}
+	
+	
+
+	public Message(String text, String topic, String userEmail, String nickname, Date timestamp) {
+		this.text = text;
+		this.topic = topic;
+		this.userEmail = userEmail;
+		this.nickname = nickname;
+		this.timestamp = timestamp;
+	}
+
+
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	
+	
 }

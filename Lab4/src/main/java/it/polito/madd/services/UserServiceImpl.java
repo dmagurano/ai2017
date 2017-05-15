@@ -19,6 +19,9 @@ public class UserServiceImpl implements UserService {
    
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    
+    @Autowired
+    private SecurityService securityService;
 
     @Override
     public void registerNewUserAccount(User user) throws Exception {
@@ -43,6 +46,11 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public User findLoggedInUser() {
+    	return findByEmail(securityService.findLoggedInUsername());
     }
     
     @Override

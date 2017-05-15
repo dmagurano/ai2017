@@ -57,11 +57,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Page<User> findAll(Integer page, Integer per_page) {
+		// build a pageable object, used to specify the query paging params
 		PageRequest pageReq = new PageRequest(page,per_page);
+		// execute the query
 		Page<User> pageRes = userRepository.findAll(pageReq);
+		// if the user asks for a page X that is greater than the total number of pages in the db, return empty response
 		if (page > pageRes.getTotalPages())
 			return null;
-		//return pageRes.getContent();
 		return pageRes;
 	}
 

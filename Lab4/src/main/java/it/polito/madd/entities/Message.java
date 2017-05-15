@@ -5,6 +5,8 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Message {
 	
 	@Id
@@ -20,5 +22,35 @@ public class Message {
 	private String nickname;
 	
 	private Date timestamp;
+
+	@JsonIgnore
+	public String getId() {
+		return id;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	@JsonIgnore
+	public String getTopic() {
+		return topic;
+	}
+
+	@JsonIgnore
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	@JsonIgnore
+	public String getNickname() {
+		return nickname;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+	
+	
 	
 }

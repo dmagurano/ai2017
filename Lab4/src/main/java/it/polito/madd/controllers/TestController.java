@@ -1,5 +1,7 @@
 package it.polito.madd.controllers;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import groovyjarjarasm.asm.commons.Method;
 import it.polito.madd.entities.Bike;
@@ -89,9 +92,17 @@ public class TestController {
     }
     
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute("user") @Valid User user, BindingResult result, Model model) {
+    public String register(@ModelAttribute("user") @Valid User user, @RequestParam MultipartFile file, BindingResult result, Model model) {
     	
     	boolean registered = true;
+    	
+    	//Set image in class user to store it in db
+    	try {
+			user.setImage(file.getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         if (!result.hasErrors()) {
             registered = createUserAccount(user, result);

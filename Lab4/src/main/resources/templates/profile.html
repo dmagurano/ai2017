@@ -19,6 +19,7 @@
 				<!--         <div th:replace="fragments/alert :: alert (type='danger', message='Form contains errors. Please try again.')">Alert</div> -->
 				<!--     </th:block> -->
 				    <legend th:text="'Hi ' + ${user.nickname} + ', this is your profile page'"></legend>
+				    <img th:src="@{'data:image/*;base64,'+${user.generateBase64Image()}}" style="width: 150px; height: 150px;"/>
 				    <table class="table table-user-information">
 				    	<tbody>
 				    		<tr>

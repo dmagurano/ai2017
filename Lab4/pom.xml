@@ -92,6 +92,11 @@
 			<artifactId>stomp-websocket</artifactId>
 			<version>2.3.3-1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.impetus.kundera.client</groupId>
+			<artifactId>kundera-mongo</artifactId>
+			<version>3.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>

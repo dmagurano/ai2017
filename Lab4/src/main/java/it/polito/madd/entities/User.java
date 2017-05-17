@@ -1,9 +1,11 @@
 package it.polito.madd.entities;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -79,6 +81,16 @@ public class User implements UserDetails {
 	@NotNull
     @NotEmpty
 	private String pubTransport;
+	
+	@Lob
+	private byte[] image;
+
+	//used to convert byte[] in base64 string otherwise the image won't be showed in thymeleaf
+	public String generateBase64Image()
+	{
+	    return Base64.getEncoder().encodeToString((this.getImage()));
+	}
+	
 
 	public User() {
 		ownCar = new Car();
@@ -247,6 +259,16 @@ public class User implements UserDetails {
 		for (String role : roles) {
 			this.roles.add( new Role(role) );
 		}
+	}
+
+
+	public byte[] getImage() {
+		return image;
+	}
+
+
+	public void setImage(byte[] image) {
+		this.image = image;
 	}
 	
 }

@@ -25,11 +25,11 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 		registry.setApplicationDestinationPrefixes("/app"); 
 	}
 	
-	@Bean
+	/*@Bean
 	public UserDirectory userDirectory(){
 		return new UserDirectory();
 	}
-	
+	*/
 		
 	
 }

@@ -1,115 +1,134 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-	  <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
-	  <link th:href="@{/css/custom-bootstrap.css}" rel="stylesheet"/>
-	  <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
-	  <script src="/webjars/jquery/jquery.js"></script>
-	  <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-	  <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-      <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-	  <link th:href="@{/css/chatPage.css}" rel="stylesheet"/>
-	</head>
-	<body>
-		<script src="https://use.fontawesome.com/45e03a14ce.js"></script>
-		<div th:replace="fragments/navbar"></div>
-		<div class="main_section">
-		   <div class="container">
-			  <div class="chat_container">
-				 <div class="col-sm-3 chat_sidebar">
-				 <div class="row">
-					
-					<div class="dropdown all_conversation">
-					   <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					   <i class="fa fa-weixin" aria-hidden="true"></i>
-					   Users list
-					   </button>
-					</div>
-					<div class="member_list">
-					   <ul id="usersList" class="list-unstyled">
-						  <li class="left clearfix">
-							 <span class="chat-img pull-left">
-							 <img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/128/User-blue-icon.png" alt="User Avatar" class="img-circle"/>
-							 </span>
-							 <div class="chat-body clearfix">
-								<div class="header_sec">
-								   <strong class="primary-font">Jack Sparrow</strong> <strong class="pull-right">
-								   09:45AM</strong>
-								</div>
-		<!--                         <div class="contact_sec"> -->
-		<!--                            <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span> -->
-		<!--                         </div> -->
-							 </div>
-						  </li>
-					 
-					   </ul>
-					</div></div>
-				 </div>
-				 <!--chat_sidebar-->
-				 
-				 
-				 <div class="col-sm-9 message_section">
-				 <div class="row">
-				
-				 
-				 <div class="chat_area">
-				 <ul id="chatMessages" class="list-unstyled">
-				 <li class="left clearfix">
-							 <span class="chat-img1 pull-left">
-							 <img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/128/User-blue-icon.png" alt="User Avatar" class="img-circle"/>
-							 </span>
-							 <div class="chat-body1 clearfix">
-								<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
-								<div class="chat_time pull-right">09:40PM</div>
-							 </div>
-				 </li>
-					 <li class="left clearfix">
-							 <span class="chat-img1 pull-left">
-							 <img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/128/User-blue-icon.png" alt="User Avatar" class="img-circle"/>
-							 </span>
-							 <div class="chat-body1 clearfix">
-								<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
-								<div class="chat_time pull-right">09:41PM</div>
-							 </div>
-				 </li>
-				 
-				 <li class="left clearfix admin_chat">
-							 <span class="chat-img1 pull-right">
-							 <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle"/>
-							 </span>
-							 <div class="chat-body1 clearfix">
-								<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
-								<div class="chat_time pull-left">09:40PM</div>
-							 </div>
-						  </li>
-						  <li class="left clearfix admin_chat">
-							 <span class="chat-img1 pull-right">
-							 <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle"/>
-							 </span>
-							 <div class="chat-body1 clearfix">
-								<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
-								<div class="chat_time pull-left">09:40PM</div>
-							 </div>
-						  </li>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+	<link th:href="@{/css/custom-bootstrap.css}" rel="stylesheet" />
+	<link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet" />
+	<script src="/webjars/jquery/jquery.js"></script>
+	<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+	<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+	<link th:href="@{/css/chatPage.css}" rel="stylesheet" />
+</head>
+<body>
+	<script src="https://use.fontawesome.com/45e03a14ce.js"></script>
 
-				 </ul>
-				 </div><!--chat_area-->
-				  <div class="message_write">
-				 <textarea id="textArea" class="form-control" placeholder="type a message"></textarea>
-				 <div class="clearfix"></div>
-				 <div class="chat_bottom"><a href="#" class="pull-left upload_btn"><i class="fa fa-cloud-upload" aria-hidden="true"></i>
-		 Add Image</a>
-		 <a id="sendBtn" href="#" class="pull-right btn btn-success">
-		 Send</a></div>
-				 </div>
-				 </div>
-				 </div> <!--message_section-->
-			  </div>
-		   </div>
+	<div th:replace="fragments/navbar"></div>
+
+	<div class="main_section">
+		<div class="container">
+			<div class="chat_container">
+				<div class="col-sm-3 chat_sidebar">
+					<div class="row">
+						<div class="dropdown all_conversation">
+							<button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-weixin" aria-hidden="true"></i>Users list
+							</button>
+						</div>
+						<div class="member_list">
+							<ul id="usersList" class="list-unstyled">
+							<!--
+								<li class="left clearfix">
+									<span class="chat-img pull-left">
+										<img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/128/User-blue-icon.png" alt="User Avatar" class="img-circle" />
+									</span>
+									<div class="chat-body clearfix">
+										<div class="header_sec">
+											<strong class="primary-font">Jack Sparrow</strong>
+											<strong class="pull-right"> 09:45AM</strong>
+										</div>
+										<div class="contact_sec">
+										<strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
+										</div>
+									</div>
+								</li>
+								-->
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!--chat_sidebar-->
+
+
+				<div class="col-sm-9 message_section">
+					<div class="row">
+						<div class="chat_area">
+							<ul id="chatMessages" class="list-unstyled">
+								<!-- 
+								<li class="left clearfix">
+									<span class="chat-img1 pull-left">
+										<img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/128/User-blue-icon.png" alt="User Avatar" class="img-circle" />
+									</span>
+									<div class="chat-body1 clearfix">
+										<p>Contrary to popular belief, Lorem Ipsum is not simply
+											random text. It has roots in a piece of classical Latin
+											literature from 45 BC, making it over 2000 years old. Richard
+											McClintock, a Latin professor at Hampden-Sydney College in
+											Virginia.</p>
+										<div class="chat_time pull-right">09:40PM</div>
+									</div></li>
+								<li class="left clearfix"><span class="chat-img1 pull-left">
+										<img
+										src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/128/User-blue-icon.png"
+										alt="User Avatar" class="img-circle" />
+								</span>
+									<div class="chat-body1 clearfix">
+										<p>Contrary to popular belief, Lorem Ipsum is not simply
+											random text. It has roots in a piece of classical Latin
+											literature from 45 BC, making it over 2000 years old. Richard
+											McClintock, a Latin professor at Hampden-Sydney College in
+											Virginia.</p>
+										<div class="chat_time pull-right">09:41PM</div>
+									</div></li>
+
+								<li class="left clearfix admin_chat"><span
+									class="chat-img1 pull-right"> <img
+										src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"
+										alt="User Avatar" class="img-circle" />
+								</span>
+									<div class="chat-body1 clearfix">
+										<p>Contrary to popular belief, Lorem Ipsum is not simply
+											random text. It has roots in a piece of classical Latin
+											literature from 45 BC, making it over 2000 years old. Richard
+											McClintock, a Latin professor at Hampden-Sydney College in
+											Virginia.</p>
+										<div class="chat_time pull-left">09:40PM</div>
+									</div></li>
+								<li class="left clearfix admin_chat"><span
+									class="chat-img1 pull-right"> <img
+										src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg"
+										alt="User Avatar" class="img-circle" />
+								</span>
+									<div class="chat-body1 clearfix">
+										<p>Contrary to popular belief, Lorem Ipsum is not simply
+											random text. It has roots in a piece of classical Latin
+											literature from 45 BC, making it over 2000 years old. Richard
+											McClintock, a Latin professor at Hampden-Sydney College in
+											Virginia.</p>
+										<div class="chat_time pull-left">09:40PM</div>
+									</div>
+								</li>
+								-->
+							</ul>
+						</div>
+						<!--chat_area-->
+						<div class="message_write">
+							<textarea id="textArea" class="form-control" placeholder="type a message"></textarea>
+							<div class="clearfix"></div>
+							<div class="chat_bottom">
+								<a href="#" class="pull-left upload_btn"><i class="fa fa-cloud-upload" aria-hidden="true"></i>Add Image</a> 
+								<a id="sendBtn" href="#" class="pull-right btn btn-success">Send</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--message_section-->
+			</div>
 		</div>
-		<div th:replace="fragments/footer"></div>
-		<script th:src="@{/js/chatApp.js}"></script>
-	</body>
+	</div>
+	<div th:replace="fragments/footer"></div>
+	<script th:src="@{/js/chatApp.js}"></script>
+</body>
 </html>

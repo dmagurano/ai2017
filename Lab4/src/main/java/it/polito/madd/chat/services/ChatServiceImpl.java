@@ -3,7 +3,6 @@ package it.polito.madd.chat.services;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;

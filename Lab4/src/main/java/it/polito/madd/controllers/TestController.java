@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,14 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import groovyjarjarasm.asm.commons.Method;
-import it.polito.madd.entities.Bike;
-import it.polito.madd.entities.Car;
 import it.polito.madd.entities.User;
 import it.polito.madd.services.SecurityService;
-import it.polito.madd.services.SecurityServiceImpl;
 import it.polito.madd.services.UserService;
-import it.polito.madd.services.UserServiceImpl;
 
 
 @Controller
@@ -40,8 +33,6 @@ public class TestController {
     @Value("${user.minPasswordLength}")
 	Integer minPasswordLength;
     
-    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
-
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, String error, String logout) {
         if (error != null)

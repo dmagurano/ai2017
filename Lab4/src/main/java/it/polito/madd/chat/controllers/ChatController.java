@@ -1,7 +1,6 @@
 package it.polito.madd.chat.controllers;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +9,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import it.polito.madd.chat.model.ChatMessage;
 import it.polito.madd.chat.model.ChatUser;
 import it.polito.madd.chat.model.JoinMessage;
-import it.polito.madd.chat.model.Roster;
 import it.polito.madd.chat.model.UserDirectory;
 import it.polito.madd.chat.services.ChatService;
 import it.polito.madd.entities.User;

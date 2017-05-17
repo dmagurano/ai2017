@@ -8,7 +8,7 @@
     <meta name="author" content=""/>
     <!-- <link rel="shortcut icon" th:href="@{/resources/ico/favicon.png}"/>  -->
 
-    <title>Login</title>
+    <title>Change Nickname</title>
 
 	 <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
@@ -26,20 +26,27 @@
 
     <div class="container">
     
-        <form class="form-signin" role="form" method="POST" th:action="@{/login}">
-            <div class="alert alert-danger" th:if="${param.error}">
-                <p th:text="#{login.error.invalid}">Invalid Credentials.</p>
-            </div>
+        <form class="form-signin" role="form" method="POST" th:action="@{/change-nickname}">
 
-            <h2 class="form-signin-heading">Please sign in</h2>
+			<th:block th:if="${alreadyInUseNickname}">   
+		        <div th:replace="fragments/alert :: alert (type='danger', message='Nickname is already in use.')">
+		        	Nickname is already in use.
+		        </div>
+	        </th:block>
+
+			<th:block th:if="${emptyNickname}">   
+		        <div th:replace="fragments/alert :: alert (type='danger', message='Nickname must not be empty.')">
+		        	Nickname must not be empty.
+		        </div>
+	        </th:block>				    
+
+            <h2 class="form-signin-heading">Update your Nickname</h2>
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Email address" name="username" required="true" autofocus="true"/>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" name="password" required="true"/>
+                <input type="text" class="form-control" placeholder="New Nickname" name="new-nickname" autofocus="true" required="true"/>
             </div>
             
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Change</button>
+            
         </form>
         
     </div>

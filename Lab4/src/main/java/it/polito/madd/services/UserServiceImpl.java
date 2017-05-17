@@ -74,5 +74,22 @@ public class UserServiceImpl implements UserService {
 			return null;
 		return pageRes;
 	}
+	
+	@Override
+	public boolean checkPassword(User user, String password) {
+		return bCryptPasswordEncoder.matches(password, user.getPassword());
+	}
+
+	@Override
+	public void updateUserNewNickname(User user, String nickname) {
+		user.setNickname(nickname);
+		userRepository.save(user);		
+	}
+
+	@Override
+	public void updateUserNewPassword(User user, String password) {
+		user.setPassword(bCryptPasswordEncoder.encode(password));
+		userRepository.save(user);
+	}
 
 }

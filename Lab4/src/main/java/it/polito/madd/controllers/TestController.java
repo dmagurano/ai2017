@@ -98,7 +98,7 @@ public class TestController {
     }
     
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute("user") @Valid User user, @RequestParam MultipartFile file, BindingResult result, Model model) {
+    public String register(@ModelAttribute("user") @Valid User user, BindingResult result, @RequestParam MultipartFile file, Model model) {
     	
     	boolean registered = true;
     	

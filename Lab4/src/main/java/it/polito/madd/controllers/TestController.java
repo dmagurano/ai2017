@@ -1,11 +1,10 @@
 package it.polito.madd.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -33,6 +32,18 @@ public class TestController {
     @Value("${user.minPasswordLength}")
 	Integer minPasswordLength;
     
+    @Value("#{'${topics}'.split(',')}")
+	private List<String> topics;
+    
+    @Value("#{'${user.educationLevels}'.split(',')}")
+	private List<String> educationLevels;
+    
+    @Value("#{'${user.jobs}'.split(',')}")
+	private List<String> jobs;
+    
+    @Value("#{'${user.carSharingServices}'.split(',')}")
+	private List<String> carSharingServices;
+    
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model, String error, String logout) {
         if (error != null)
@@ -46,12 +57,16 @@ public class TestController {
 
     @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
     public String welcome(Model model) {
+    	model.addAttribute("topics", topics);
         return "welcome";
     }
     
     @RequestMapping(value = {"/register"}, method = RequestMethod.GET)
     public String test(Model model) {
     	model.addAttribute("user", new User());
+    	model.addAttribute("educationLevels", educationLevels);
+    	model.addAttribute("jobs", jobs);
+    	model.addAttribute("carSharingServices", carSharingServices);
         return "register";
     }
     

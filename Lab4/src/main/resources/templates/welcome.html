@@ -19,9 +19,14 @@
 		</div>
 		
 		<div class="list-group">
-			  <a href="/chat?topic=busSub" class="list-group-item">Bus &amp; Metro</a>
-			  <a href="/chat?topic=traffic" class="list-group-item">Traffic</a>
-			  <a href="/chat?topic=bike" class="list-group-item">Bike</a>
+			<a th:each="topic : ${topics}" th:href="@{/chat(topic=${topic})}" class="list-group-item">
+				<th:block th:text="${topic}"></th:block>
+			</a>
+			<!-- 
+			<a href="/chat?topic=busSub" class="list-group-item">Bus &amp; Metro</a>
+			<a href="/chat?topic=traffic" class="list-group-item">Traffic</a>
+			<a href="/chat?topic=bike" class="list-group-item">Bike</a>
+			 -->
 		</div>
 		
 	</div>

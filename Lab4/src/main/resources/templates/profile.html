@@ -51,7 +51,7 @@
 			    			<td>Current job</td>
 			    			<td th:text="${user.job}"></td>
 			    		</tr>
-			    		<tr>
+			    		<tr th:if="${user.ownCar.registrationYear} != null">
 			    			<td>Car information</td>
 			    			<td th:text="'Registration year: ' + ${user.ownCar.registrationYear} + ', fuel: ' + ${user.ownCar.fuelType}">No car setted</td>
 			    		</tr>

@@ -259,7 +259,7 @@ public class User implements UserDetails {
 		}
 	}
 
-
+	@JsonIgnore
 	public byte[] getImage() {
 		return image;
 	}

@@ -118,6 +118,9 @@ public class TestController {
         }
         
         if (result.hasErrors()) {
+        	model.addAttribute("educationLevels", educationLevels);
+        	model.addAttribute("jobs", jobs);
+        	model.addAttribute("carSharingServices", carSharingServices);
             return "register";
         }
         

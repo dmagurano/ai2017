@@ -1,3 +1,4 @@
+angular.module('App').value('Routes',
 {
   "routes": [
     [
@@ -1067,4 +1068,4 @@
       }
     ]
   ]
-}
+});

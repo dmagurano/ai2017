@@ -7,6 +7,10 @@ app.config(function ($routeProvider, $locationProvider) {
             controller: 'MainCtrl',
             controllerAs: 'ctrl'
         })
+        .when('/map', {
+            templateUrl: 'map.html',
+            controller: 'SimpleMapController'
+        })
         .otherwise({ redirectTo: "/" });
 
     // configure html5 to get links working on jsfiddle
@@ -15,14 +19,28 @@ app.config(function ($routeProvider, $locationProvider) {
 
 app.controller('MainCtrl', ['$scope', 'DataProvider',
     function ($scope, DataProvider) {
-        /* */
+        this.lines = DataProvider.load();
     }
 ]);
 
+app.controller("SimpleMapController", [ '$scope', function($scope) {
+    angular.extend($scope, {
+        defaults: {
+            scrollWheelZoom: false
+        }
+    });
+}]);
+
 app.factory('DataProvider', ['Linee',
     function (linee) {
-        console.log(linee);
-        return {};
+        return {
+            load : function () { return linee.lines; },
+            query : function (id) {
+                linee.lines.forEach( function (line) {
+                if (line.line == id)
+                    return line;
+            })}
+        };
     }
 ]);
 

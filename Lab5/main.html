@@ -5,14 +5,14 @@
 		<div class="panel-body">
 		</div>
 		-->
-		<table class="table">
+		<table class="table table-hover">
 		    <tr>
 		        <th>Line</th>
 		        <th>Description</th>
 		    </tr>
 
-		    <tr ng-repeat="line in ctrl.lines" ng-click="ctrl.printOnMap(line.line)">
-		        <td>{{line.line}}</td>
+		    <tr ng-class="{active: ctrl.lineID == line.line}" ng-repeat="line in ctrl.lines" ng-click="ctrl.goToLink(line)">
+		    	<td>{{line.line}}</td>
 		        <td>{{line.desc}}</td>
 		    </tr>
 		</table>
@@ -20,5 +20,5 @@
 </div>
 
 <div class="col-lg-7">
-    <leaflet lf-center="turin" paths="paths" height="480px"></leaflet>
+    <leaflet  bounds="bounds" paths="paths" height="480px"></leaflet>
 </div>

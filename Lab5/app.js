@@ -11,6 +11,11 @@ app.config(function ($routeProvider, $locationProvider) {
             templateUrl: 'calculate.html',
             controller: 'MapController',
         })
+        .when('/lines/:lineID', {
+            templateUrl: 'main.html',
+            controller: 'MainCtrl',
+            controllerAs: 'ctrl'
+        })
         .otherwise({ redirectTo: "/" });
 
     // configure html5 to get links working on jsfiddle

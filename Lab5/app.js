@@ -9,7 +9,8 @@ app.config(function ($routeProvider, $locationProvider) {
         })
         .when('/calculate', {
             templateUrl: 'calculate.html',
-            controller: 'MapController',
+            controller: 'CalculateController',
+            controllerAs: 'ctrl'
         })
         .when('/lines/:lineID', {
             templateUrl: 'main.html',

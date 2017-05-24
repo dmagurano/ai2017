@@ -5,15 +5,15 @@
         <form id="search-form">
             <div class="input-group">
                 <span class="input-group-addon">Source</span>
-                <input type="text" class="form-control" placeholder="Source" aria-describedby="basic-addon1">
+                <input ng-model="ctrl.source" type="text" class="form-control" placeholder="Source" aria-describedby="basic-addon1">
             </div>
             <br>
             <div class="input-group">
                 <span class="input-group-addon">Destination</span>
-                <input type="text" class="form-control" placeholder="Destination" aria-describedby="basic-addon1">
+                <input ng-model="ctrl.destination" type="text" class="form-control" placeholder="Destination" aria-describedby="basic-addon1">
             </div>
             <br>
-            <button type="button" class="btn btn-default btn-block">Search</button>
+            <button ng-click="ctrl.calculate()" type="button" class="btn btn-default btn-block">Search</button>
         </form>
     </div>
 

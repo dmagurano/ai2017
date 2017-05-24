@@ -1,6 +1,7 @@
-angular.module('App').value('Routes',
+
+angular.module('App').value('Percorsi',
 {
-  "routes": [
+  "paths": [
     [
       {
         "idSource": "331",

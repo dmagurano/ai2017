@@ -1,4 +1,4 @@
-app.controller('MainCtrl', [ '$scope', 'LinesDataProvider',  'leafletBoundsHelpers', '$routeParams', '$location',
+app.controller('MainCtrl', [ '$scope', 'LinesDataProvider', 'leafletBoundsHelpers', '$routeParams', '$location',
     function ($scope, LinesDataProvider, leafletBoundsHelpers, $routeParams, $location) {
 
         this.lineID = $routeParams.lineID;

@@ -4,7 +4,10 @@
 <head>
     <link rel="stylesheet" href="bootstrap.css">
     <link rel="stylesheet" href="style.css" />
+    <!--
     <base href="/Lab5/"/>
+    -->
+
     <!--
       <script type="text/javascript">
       angular.element(document.getElementsByTagName('head')).append(angular.element('<base href="' + window.location.pathname + '" />'));
@@ -16,6 +19,8 @@
     <script src="angular-resource.js"></script>
     <script src="angular-route.js"></script>
     <script src="app.js"></script>
+    <script src="app-main.js"></script>
+    <script src="app-calculate.js"></script>
     <script src="linee.js"></script>
     <script src="ui-leaflet.js"></script>
     <link rel="stylesheet" href="leaflet.css"/>
@@ -31,11 +36,15 @@
         </div>
         <ul class="nav navbar-nav">
             <li> <a href="#!/">Home</a> </li>
+            <li> <a href="#!/calculate">Calculate</a></li>
         </ul>
     </div>
     <!-- /.container -->
 </nav>
+
+<!--
 <a href="#!map">Prova</a>
+-->
 
 <!-- Page Content -->
 <div class="container">

@@ -1,14 +1,24 @@
+<div class="col-lg-5">
+	<div class="panel panel-default">
+		<div class="panel-heading">Urban Lines</div>
+		<!--
+		<div class="panel-body">
+		</div>
+		-->
+		<table class="table">
+		    <tr>
+		        <th>Line</th>
+		        <th>Description</th>
+		    </tr>
 
-<table class="table">
-    <tr>
-        <th>Line</th>
-        <th>Description</th>
-    </tr>
-    <tr ng-repeat="line in ctrl.lines">
-        <td>{{line.line}}</td>
-        <td>{{line.desc}}</td>
-    </tr>
-</table>
-<leaflet id="map-simple-map"></leaflet>
+		    <tr ng-repeat="line in ctrl.lines" ng-click="ctrl.printOnMap(line.line)">
+		        <td>{{line.line}}</td>
+		        <td>{{line.desc}}</td>
+		    </tr>
+		</table>
+	</div>
+</div>
 
-
+<div class="col-lg-7">
+    <leaflet lf-center="turin" paths="paths" height="480px"></leaflet>
+</div>

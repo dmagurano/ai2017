@@ -6,15 +6,11 @@ app.controller('MainCtrl', [ '$scope', 'LinesDataProvider',  'leafletBoundsHelpe
         this.lines = LinesDataProvider.load();
 
         this.goToLink = function(line) {
-          $location.path('#!/lines/' + line.line);
+          $location.path('lines/' + line.line);
         };
 
         angular.extend($scope, {
-            // center: {
-            //             lat: 45.07,
-            //             lng: 7.69,
-            //             zoom: 13
-            // },
+            center: {},
             bounds: {},
             paths: {}
         });
@@ -23,6 +19,11 @@ app.controller('MainCtrl', [ '$scope', 'LinesDataProvider',  'leafletBoundsHelpe
             var PathInfo = LinesDataProvider.loadPath($routeParams.lineID);
             $scope.paths = PathInfo.paths;
             $scope.bounds = leafletBoundsHelpers.createBoundsFromArray(PathInfo.bounds);
+        } else {
+            $scope.center = { lat: 45.07,
+                         lng: 7.69,
+                         zoom: 13 
+                     }
         };
 
     }

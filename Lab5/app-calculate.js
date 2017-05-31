@@ -10,6 +10,8 @@ app.controller('CalculateController', ['$scope', 'PathsDataProvider', 'leafletBo
             bounds: {}
         });
 
+        $scope.pathDetailsVisibility = true;
+        $scope.pathDetails = PathsDataProvider.getPathDetails();
         this.calculate = function(){
             PathsDataProvider.setSource(this.source);
             PathsDataProvider.setDestination(this.destination);
@@ -23,13 +25,17 @@ app.controller('CalculateController', ['$scope', 'PathsDataProvider', 'leafletBo
                 $scope.paths['line' + i] = polylines[i];
 
             $scope.bounds = leafletBoundsHelpers.createBoundsFromArray(PathInfo.bounds);
+            $scope.pathDetailsVisibility = false;
         }
+
+
     }
 ]);
 
 app.factory('PathsDataProvider', [ 'Percorsi',
     function (percorsi) {
         var source, destination;
+        var currentPath = [];
 
         return {
             setSource: function(src){
@@ -37,6 +43,9 @@ app.factory('PathsDataProvider', [ 'Percorsi',
             },
             setDestination: function(dst){
                 destination = dst;
+            },
+            getPathDetails : function() {
+                return currentPath;
             },
             getPath: function() {
                 // FUTURE use source and destination
@@ -50,10 +59,32 @@ app.factory('PathsDataProvider', [ 'Percorsi',
 
                 // return a random path                
                 var i = Math.floor(Math.random() * (percorsi.paths.length));
+                // empty the current path array for html details
+                currentPath.length = 0;
+                /*
+                for (var j = 0; j < percorsi.paths[i].length; j++) {
+                    var edge = percorsi.paths[i][j];
+                    if (myline == undefined)
+                        myline = new Object();
+                    else if (myline.edgeLine === edge.edgeLine){
+                        myline.cost += edge.cost;
+                        continue;
+                    }
+                    else {
+                        currentPath.push(myline);
+                        myline = new Object();
+                    }
+                    myline.cost = edge.cost;
+
+                    myline.edgeLine = edge.edgeLine;
+                    myline.mode = edge.mode;
+
+                }*/
 
                 var curPolyline = {};
                 var previousMode;
                 var polylines = [];
+                var myline;
 
                 for (var j = 0; j < percorsi.paths[i].length; j++){
                     var edge = percorsi.paths[i][j];
@@ -106,7 +137,22 @@ app.factory('PathsDataProvider', [ 'Percorsi',
                     if (pointDst.lng > max_lng)
                         max_lng = pointDst.lng;
 
-                };
+                    // now fill the currentPath array in order to show the path details
+                    if (myline == undefined)
+                        myline = new Object();
+                    else if (myline.edgeLine === edge.edgeLine){
+                        myline.cost += edge.cost;
+                        continue;
+                    }
+                    else {
+                        currentPath.push(myline);
+                        myline = new Object();
+                    }
+                    myline.cost = edge.cost;
+
+                    myline.edgeLine = edge.edgeLine;
+                    myline.mode = edge.mode;
+                }
 
                 PathInfo.bounds = [
                                     [max_lat, max_lng],

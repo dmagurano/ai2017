@@ -15,7 +15,23 @@
             <br>
             <button ng-click="ctrl.calculate()" type="button" class="btn btn-default btn-block">Search</button>
         </form>
+
+        <div style="margin-top: 20px" class="panel panel-default" ng-hide="pathDetailsVisibility">
+            <div class="panel-heading">
+                <h3 style="text-align: center" class="panel-title" >Path details</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-striped" id="path">
+                    <tbody>
+                    <tr ng-repeat="path in pathDetails"><td>{{path.cost}} m</td><td ng-if="path.mode">Walking</td><td ng-if="!path.mode">{{path.edgeLine}}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+    <!-- <i class="material-icons">directions_walk</i>
+        <i class="fa fa-bus"></i>
+    -->
 
     <br><br>
 

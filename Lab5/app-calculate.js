@@ -10,16 +10,18 @@ app.controller('CalculateController', ['$scope', 'PathsDataProvider', 'leafletBo
             bounds: {}
         });
 
-        
         this.calculate = function(){
-            //console.log(this.source + "->" + this.destination);
-
             PathsDataProvider.setSource(this.source);
             PathsDataProvider.setDestination(this.destination);
 
             var PathInfo = PathsDataProvider.getPath();
 
-            $scope.paths = PathInfo.paths;
+            var polylines = PathInfo.polylines;
+            
+            $scope.paths = {};
+            for (var i = 0; i < polylines.length; i++)
+                $scope.paths['line' + i] = polylines[i];
+
             $scope.bounds = leafletBoundsHelpers.createBoundsFromArray(PathInfo.bounds);
         }
     }
@@ -37,49 +39,52 @@ app.factory('PathsDataProvider', [ 'Percorsi',
                 destination = dst;
             },
             getPath: function() {
-                // use source and destination
-
-                // return a random path
-                
-                var i = Math.floor(Math.random() * (percorsi.paths.length));
+                // FUTURE use source and destination
 
                 var PathInfo = new Object();
+
                 var max_lat,max_lng,min_lat,min_lng;
                 min_lat = 90; max_lat = -90; min_lng = 180; max_lng = -180;
-                var paths = {
-                    p1 : {
-                        type : "polyline",
-                        weight: 4,
-                        color: 'green',
-                        latlngs : []
-                    }
-                };
 
-                percorsi.paths[i].forEach( function (edge) {
-                    /* {
-                        "idSource": "331",
-                        "idDestination": "333",
-                        "latSrc": 45.05624,
-                        "lonSrc": 7.66459,
-                        "latDst": 45.05883,
-                        "lonDst": 7.66633,
-                        "mode": false,
-                        "cost": 318,
-                        "edgeLine": "S05"
-                    } */
+                var firstElement = true;
+
+                // return a random path                
+                var i = Math.floor(Math.random() * (percorsi.paths.length));
+
+                var curPolyline = {};
+                var previousMode;
+                var polylines = [];
+
+                for (var j = 0; j < percorsi.paths[i].length; j++){
+                    var edge = percorsi.paths[i][j];
+
                     var pointSrc = new Object();
                     var pointDst = new Object();
 
-                    //var stop = $filter('filter')(linee.stops, function (s) {return s.id === stop;})[0];
+                    if (firstElement){                        
+                        previousMode = edge.mode;
+                        firstElement = false;
+
+                        curPolyline = createPolyline(edge.mode);
+                    }
+                    else{
+                        if ( previousMode != edge.mode){
+                            polylines.push(curPolyline);
+
+                            previousMode = edge.mode;
+
+                            curPolyline = createPolyline(edge.mode);
+                        }
+                    }
 
                     pointSrc.lat = edge.latSrc;
                     pointSrc.lng = edge.lonSrc;
 
-                    pointDst.lat = edge.latSrc;
-                    pointDst.lng = edge.lonSrc;
+                    pointDst.lat = edge.latDst;
+                    pointDst.lng = edge.lonDst;
 
-                    paths.p1.latlngs.push(pointDst);
-                    paths.p1.latlngs.push(pointSrc);
+                    curPolyline.latlngs.push(pointSrc);
+                    curPolyline.latlngs.push(pointDst);
 
                     if (pointSrc.lat < min_lat)
                         min_lat = pointSrc.lat;
@@ -100,16 +105,38 @@ app.factory('PathsDataProvider', [ 'Percorsi',
                         max_lng = pointSrc.lng;
                     if (pointDst.lng > max_lng)
                         max_lng = pointDst.lng;
-                });
+
+                };
 
                 PathInfo.bounds = [
                                     [max_lat, max_lng],
                                     [min_lat, min_lng]
                                 ];
-                PathInfo.paths = paths;
+
+                PathInfo.polylines = polylines;
 
                 return PathInfo;
             }
         };
     }
 ]);
+
+function createPolyline(mode){
+    polyline = {
+        type: "polyline",
+        weight: 6,
+        color: '',
+        latlngs: []
+    };
+
+    if (mode == 0){
+        polyline.color = "yellow";
+        polyline.dashArray = "";
+    }
+    else{
+        polyline.color = "blue";
+        polyline.dashArray = "5, 10";
+    }
+
+    return polyline
+}

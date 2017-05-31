@@ -61,25 +61,6 @@ app.factory('PathsDataProvider', [ 'Percorsi',
                 var i = Math.floor(Math.random() * (percorsi.paths.length));
                 // empty the current path array for html details
                 currentPath.length = 0;
-                /*
-                for (var j = 0; j < percorsi.paths[i].length; j++) {
-                    var edge = percorsi.paths[i][j];
-                    if (myline == undefined)
-                        myline = new Object();
-                    else if (myline.edgeLine === edge.edgeLine){
-                        myline.cost += edge.cost;
-                        continue;
-                    }
-                    else {
-                        currentPath.push(myline);
-                        myline = new Object();
-                    }
-                    myline.cost = edge.cost;
-
-                    myline.edgeLine = edge.edgeLine;
-                    myline.mode = edge.mode;
-
-                }*/
 
                 var curPolyline = {};
                 var previousMode;

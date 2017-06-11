@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="style.css" />
+    <!--
+    <base href="/Lab5/"/>
+    -->
+
+    <!--
+      <script type="text/javascript">
+      angular.element(document.getElementsByTagName('head')).append(angular.element('<base href="' + window.location.pathname + '" />'));
+    </script>
+    -->
+    <script src="angular.js"></script>
+    <script src="leaflet.js"></script>
+    <script src="angular-simple-logger.min.js"></script>
+    <script src="angular-resource.js"></script>
+    <script src="angular-route.js"></script>
+    <script src="app.js"></script>
+    <script src="app-main.js"></script>
+    <script src="app-calculate.js"></script>
+    <!--
+    <script src="service.js"></script>
+    -->
+    <script src="ui-leaflet.js"></script>
+
+    <script src="linee.js"></script>
+    <script src="percorsi.js"></script>
+
+    <link rel="stylesheet" href="leaflet.css"/>
+</head>
+
+<body ng-app="App">
+
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <!-- Navbar -->
+        <div class="navbar-header">
+            <span class="navbar-brand" href="#">AngularJS</span>
+        </div>
+        <ul class="nav navbar-nav">
+            <li> <a href="#!/">Home</a> </li>
+            <li> <a href="#!/calculate">Calculate</a></li>
+        </ul>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!--
+<a href="#!map">Prova</a>
+-->
+
+<!-- Page Content -->
+<div class="container">
+    <div ng-view></div>
+</div>
+<!-- /.container -->
+
+<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy;</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.container -->
+
+<!-- Javascript code -->
+
+</body>
+
+</html>

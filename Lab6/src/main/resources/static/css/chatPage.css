@@ -1,4 +1,8 @@
- #custom-search-input {
+#chat-map {
+	height: 280px; 
+}
+
+#custom-search-input {
   background: #e8e6e7 none repeat scroll 0 0;
   margin: 0;
   padding: 10px;

@@ -14,13 +14,18 @@ public class Alert {
 	private Valuation valuation;
 	private Date timestamp;
 	private String userEmail;
+	private String nickname;
+	private String address;
+
 	private String type;
 	
-	public Alert(Double lat, Double lng, Date timestamp, String userEmail, String type) {
+	public Alert(Double lat, Double lng, String address, Date timestamp, String userEmail, String nickname, String type) {
 		this.lat = lat;
 		this.lng = lng;
+		this.address = address;
 		this.timestamp = timestamp;
 		this.userEmail = userEmail;
+		this.nickname = nickname;
 		this.valuation = new Valuation();
 		this.type = type;
 	}
@@ -32,30 +37,39 @@ public class Alert {
 	public Double getLat() {
 		return lat;
 	}
+	
 	public void setLat(Double lat) {
 		this.lat = lat;
 	}
+	
 	public Double getLng() {
 		return lng;
 	}
+	
 	public void setLng(Double lng) {
 		this.lng = lng;
 	}
+	
 	public Valuation getValuation() {
 		return valuation;
 	}
+	
 	public void setValuation(Valuation valuation) {
 		this.valuation = valuation;
 	}
+	
 	public Date getTimestamp() {
 		return timestamp;
 	}
+	
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
+	
 	public String getUserEmail() {
 		return userEmail;
 	}
+	
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
@@ -75,6 +89,20 @@ public class Alert {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 	
+	public String getAddress() {
+		return address;
+	}
 	
+	public void setAddress(String address) {
+		this.address = address;
+	}
 }

@@ -14,11 +14,11 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import it.polito.madd.chat.model.ChatMessage;
 import it.polito.madd.chat.model.ChatUser;
+import it.polito.madd.chat.model.ChatValuation;
 import it.polito.madd.chat.model.JoinMessage;
 import it.polito.madd.chat.model.UserDirectory;
 import it.polito.madd.chat.services.ChatService;
 import it.polito.madd.entities.User;
-import it.polito.madd.repositories.AlertRepository;
 import it.polito.madd.services.UserService;
 
 @Controller(value="/app")
@@ -62,12 +62,10 @@ public class ChatController implements ApplicationListener<ApplicationEvent> {
 	    chatService.retrieveAlerts(principal.getName());
 	  }
 	  
-	  
-	  
 	  @MessageMapping("/chat") 
 	  //@SendTo("/topic/chat")
 	  public void sendMessage(
-			  MessageHeaders hs, 
+			  MessageHeaders hs, 						
 			  ChatMessage chatMessage) {
 		  
 	    String sessionId=(String)hs.get("simpSessionId");
@@ -79,6 +77,21 @@ public class ChatController implements ApplicationListener<ApplicationEvent> {
 	      
 	    chatService.sendMessage(users.getUser(sessionId).getTopicname(), chatMessage);
 	  }
+	  
+	  @MessageMapping("/rate") 
+	  //@SendTo("/topic/chat")
+	  public void rateAlert(
+			  MessageHeaders hs, 						
+			  ChatValuation chatValuation) {
+		  
+	    String sessionId=(String)hs.get("simpSessionId");
+	    ChatUser u = users.getUser(sessionId);
+	      
+	    // TODO
+	    // use ChatServiceImpl.sendValuation()
+	    
+	    //chatService.sendMessage(users.getUser(sessionId).getTopicname(), chatMessage);
+	  }
 	
 	  
 	  @Override
@@ -88,11 +101,7 @@ public class ChatController implements ApplicationListener<ApplicationEvent> {
 	      String userTopic = users.getUser(sde.getSessionId()).getTopicname();
 	      users.removeUser(sde.getSessionId());
 	      
-	      
 	      chatService.updateUsersList(userTopic);
 	    }
 	  }
-
-
-
 }

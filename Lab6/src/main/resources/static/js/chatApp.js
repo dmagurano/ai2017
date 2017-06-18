@@ -3,6 +3,13 @@ var whoami = null;
 var alert = {};
 var types = ['cantiere', 'incidente', 'incendio', 'altro', 'Davide, we are watching you']
 
+/* map */
+//initializing map
+mymap = L.map('chat-map').setView([45.07, 7.69], 13);
+L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGF2cjA5MTAiLCJhIjoiY2owemk4N2FmMDJ1ZzMzbno3YjZxZDN3YyJ9.eJdGDM0goIVXcFmMrQX8og')
+	.addTo(mymap);
+/* map */
+
 $('#chatMessages').empty();
 
 $('#modal-body').append(
@@ -69,6 +76,8 @@ function sendMessage(msg) {
 	lat = (Math.random() * (max_lat - min_lat) + min_lat).toFixed(4);
 	lng = (Math.random() * (max_lng - min_lng) + min_lng).toFixed(4);
 	
+	console.log("sending ", alert);
+	
 	stompClient.send( 
 			"/app/chat", 
 			{},
@@ -76,6 +85,7 @@ function sendMessage(msg) {
 				'message': msg, 
 				'lat': alert.lat,
 				'lng': alert.lng,
+				'address': alert.address,
 				'type':alert.type
 			})
 	);
@@ -96,8 +106,132 @@ function processAlert(alert) {
 	// TODO uptade map with alert
 	console.log("new alert received");
 	console.log(alert);
+	
+	var iconUrl;
+	
+	switch(alert.type){
+	case 'cantiere':
+		iconUrl = 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png';
+		break;
+	case 'incidente':
+		iconUrl = 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png';
+		break;
+	case 'incendio':
+		iconUrl = 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png';
+		break;
+	case 'altro':
+		iconUrl = 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png';
+		break;
+	default:
+		iconUrl = 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png';
+		break;
+	}
+	
+	var coloredIcon = new L.Icon({
+		  iconUrl: iconUrl,
+		  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+		  iconSize: [25, 41],
+		  iconAnchor: [12, 41],
+		  popupAnchor: [1, -34],
+		  shadowSize: [41, 41]
+		});
+	
+	var marker = L.marker([alert.lat, alert.lng], {icon: coloredIcon}).addTo(mymap);
+	marker.bindPopup(
+			/*
+			"<b>" + alert.type.toUpperCase() + "</b><br>"
+			+ alert.address + "<br>"
+			+ "attivo dal " + printDateTime(alert.timestamp) + "<br>"
+			+ "segnalato da " + alert.nickname + "<br>"
+			+ 
+			+ "	<div class=\"acidjs-rating-stars acidjs-rating-disabled\">"
+			+ "		valutazione"
+			+ "			<input type=\"hidden\" name=\"alert-id\">"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-0\" value=\"5\" />"
+			+ "			<label for=\"group-2-0\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-1\" value=\"4\" />"
+			+ "			<label for=\"group-2-1\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-2\" value=\"3\" checked=\"checked\"/>"
+			+ "			<label for=\"group-2-2\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-3\" value=\"2\" />"
+			+ "			<label for=\"group-2-3\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-4\"  value=\"1\" />"
+			+ "			<label for=\"group-2-4\"></label>"
+			+ "</div>"
+			+ "<a>vota</a>"
+			+ 
+			*/
+			loadPopup(alert)
+	);
+
+	
 }
 
+function loadPopup(alert){
+	return "<b>" + alert.type.toUpperCase() + "</b><br>"
+			+ alert.address + "<br>"
+			+ "attivo dal " + printDateTime(alert.timestamp) + "<br>"
+			+ "segnalato da " + alert.nickname + "<br>"
+			+ "valutazione"
+			+ "	<div id=\"rating-out-" + alert.id + "\" class=\"acidjs-rating-stars acidjs-rating-disabled\">"
+			+ "			<input type=\"hidden\" name=\"alert-id\">"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-0\" value=\"5\" />"
+			+ "			<label for=\"group-2-0\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-1\" value=\"4\" />"
+			+ "			<label for=\"group-2-1\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-2\" value=\"3\" checked=\"checked\"/>"
+			+ "			<label for=\"group-2-2\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-3\" value=\"2\" />"
+			+ "			<label for=\"group-2-3\"></label>"
+			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-4\"  value=\"1\" />"
+			+ "			<label for=\"group-2-4\"></label>"
+			+ "	</div><br>"
+			+ " <button onclick=\"enableRating(\'" + alert.id + "\')\" id=\"rating-button-" + alert.id + "\" >vota</button>"
+			+ "	<div id=\"rating-in-" + alert.id + "\" class=\"acidjs-rating-stars hidden-rating\">"
+			+ "			<input type=\"hidden\" name=\"alert-id\">"
+			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-0\" value=\"5\" />"
+			+ "			<label for=\"group-2-0\"></label>"
+			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-1\" value=\"4\" />"
+			+ "			<label for=\"group-2-1\"></label>"
+			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-2\" value=\"3\" checked=\"checked\"/>"
+			+ "			<label for=\"group-2-2\"></label>"
+			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-3\" value=\"2\" />"
+			+ "			<label for=\"group-2-3\"></label>"
+			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-4\"  value=\"1\" />"
+			+ "			<label for=\"group-2-4\"></label>"
+			+ "			<button onclick=\"submitRating(\'" + alert.id + "\')\">invia</button>"
+			+ "	</div><br>";
+}
+
+function enableRating(alertId){
+	$("#rating-in-"+ alertId).show();
+	$("#rating-button-"+ alertId).hide();
+}
+
+function submitRating(alertId){
+	// TODO
+	// send rate and update all rates
+}
+
+function printDateTime(timestamp){
+	var date = new Date(timestamp);
+	
+	var day = date.getDate();
+	
+	var month = date.getMonth() + 1;
+	
+	var year = date.getFullYear();
+	
+	var hours = date.getHours();
+	
+	var minutes = "0" + date.getMinutes();
+	
+	var seconds = "0" + date.getSeconds();
+
+	var formattedTime = day + "." + month + "." + year + " " + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+	
+	return formattedTime;
+}
 
 function updateUsers (user) {
 	$("#usersList").append('<li class="left clearfix\\"> ' + 
@@ -124,7 +258,7 @@ function newRecvMessage (msg,date) {
 
 function newSentMessage (msg,date) {
 	var time = isToday(date) ? date.toLocaleTimeString() : date.toLocaleString();
-	$("#chatMessages").append('<li class="left clearfix admin_chat"><span class="chat-img1 pull-right"><img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle"/></span><div class="chat-body2 clearfix"><p>'+
+	$("#chatMessages").append('<li class="left clearfix admin_chat"><span class="chat-img1 pull-right"><img src="https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/995179_496393017119212_1942402182_n.jpg?oh=931db49c4f4f7c905efde31e3371f592&oe=59E4426F" alt="User Avatar" class="img-circle"/></span><div class="chat-body2 clearfix"><p>'+
 								msg.message+
 								'</p><div class="chat_time pull-left">'+time+'</div></div></li>');
 	updateChat();
@@ -195,9 +329,18 @@ $("#textArea").bind(
 				    	function(data) {
 				    		console.log(data);
 				    		searchCompleted = true;
+				    		// search 'Turin' in data
+				    		var turinResult;
+				    		for(var i in data){
+				    			if ((data[i].display_name.indexOf('Torino') !== -1) || (data[i].display_name.indexOf('Turin') !== -1)){
+				    				turinResult = data[i];
+				    				break;
+				    			}
+				    		}
 				        	//parse data from JSON
-				    		alert.lat = data[0].lat;
-				    		alert.lng = data[0].lon;
+				    		alert.lat = turinResult.lat;
+				    		alert.lng = turinResult.lon;
+				    		alert.address = turinResult.display_name;
 				    		
 				    		// TODO add popup for type selection
 				    		$('#alertsModal').modal({

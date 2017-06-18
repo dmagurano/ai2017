@@ -13,6 +13,7 @@ public class ChatMessage {
 		// alert params, can be null
 		private Double lat;
 		private Double lng;
+		private String address;
 		private String type;
 		
 		
@@ -27,7 +28,7 @@ public class ChatMessage {
 		}
 		
 		public ChatMessage(String username, String nickname, String message, Date date, Double lat, Double lng,
-				String type) {
+				String address, String type) {
 			this.username = username;
 			this.nickname = nickname;
 			this.message = message;
@@ -38,10 +39,10 @@ public class ChatMessage {
 		}
 		
 		public Alert extractAlert() {
-			if (lat == null || lng == null || type == null)
+			if (lat == null || lng == null || type == null || address == null)
 				return null;
 			else
-				return new Alert(lat,lng,date,username,type);
+				return new Alert(lat,lng,address,date,username,nickname,type);
 		}
 
 		public Double getLat() {
@@ -74,10 +75,12 @@ public class ChatMessage {
 		public Date getDate() {
 			return date;
 		}
+		
 		public ChatMessage setDate(Date date) {
 			this.date = date;
 			return this;
 		}
+		
 		public String getUsername() {
 			return username;
 		}
@@ -95,13 +98,24 @@ public class ChatMessage {
 			this.username = username;
 			return this;
 		}
+		
 		public String getMessage() {
 			return message;
 		}
+		
 		public ChatMessage setMessage(String message) {
 			this.message = message;
 			return this;
 		}
+		
+		public String getAddress() {
+			return address;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
+		}
+
 		@Override
 		public String toString() {
 			return "ChatMessage [user=" + username + ", message=" + message + "]";

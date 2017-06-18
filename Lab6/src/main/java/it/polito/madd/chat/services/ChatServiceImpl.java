@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import it.polito.madd.chat.model.ChatMessage;
+import it.polito.madd.chat.model.ChatValuation;
 import it.polito.madd.chat.model.Roster;
 import it.polito.madd.chat.model.UserDirectory;
 import it.polito.madd.entities.Alert;
@@ -66,6 +67,30 @@ public class ChatServiceImpl implements ChatService {
 	    messageRepo.save(mess);
 	    
 	    messagingTemplate.convertAndSend(chatMessagesList, msg);
+	}
+	
+	public void sendValuation (ChatValuation chatValuation) {
+		String ratesList = "/topic/rates/";
+		
+		// TODO
+		// update valuation in alert
+		// https://stackoverflow.com/questions/14527980/can-you-specify-a-key-for-addtoset-in-mongo
+		
+		/*
+		Alert alert = msg.extractAlert();
+		
+		if (alert != null){
+			alertRepository.save(alert);
+
+			messagingTemplate.convertAndSend(alertTopic, alert);
+		}  
+	    
+	    Message mess = new Message(msg.getMessage(), topic, msg.getUsername(), msg.getNickname(), msg.getDate());
+	    
+	    messageRepo.save(mess);
+	    
+	    messagingTemplate.convertAndSend(chatMessagesList, msg);
+	    */
 	}
 	
 	public void retrieveLastMessages (String topic, String user) {

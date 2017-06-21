@@ -15,8 +15,8 @@ public class ChatMessage {
 		private Double lng;
 		private String address;
 		private String type;
-		
-		
+		private String alertId;
+			
 		public ChatMessage() {
 		}
 		
@@ -114,6 +114,14 @@ public class ChatMessage {
 
 		public void setAddress(String address) {
 			this.address = address;
+		}
+
+		public String getAlertId() {
+			return alertId;
+		}
+
+		public void setAlertId(String alertId) {
+			this.alertId = alertId;
 		}
 
 		@Override

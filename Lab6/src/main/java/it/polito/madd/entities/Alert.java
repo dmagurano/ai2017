@@ -1,6 +1,8 @@
 package it.polito.madd.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -11,7 +13,7 @@ public class Alert {
 
 	private Double lat;
 	private Double lng;
-	private Valuation valuation;
+	private List<Rate> rates;
 	private Date timestamp;
 	private String userEmail;
 	private String nickname;
@@ -26,12 +28,8 @@ public class Alert {
 		this.timestamp = timestamp;
 		this.userEmail = userEmail;
 		this.nickname = nickname;
-		this.valuation = new Valuation();
 		this.type = type;
-	}
-	
-	public void addVote(String email, Integer vote) {
-		this.valuation.addVote(email, vote);
+		this.rates = new ArrayList<Rate>();
 	}
 	
 	public Double getLat() {
@@ -48,14 +46,6 @@ public class Alert {
 	
 	public void setLng(Double lng) {
 		this.lng = lng;
-	}
-	
-	public Valuation getValuation() {
-		return valuation;
-	}
-	
-	public void setValuation(Valuation valuation) {
-		this.valuation = valuation;
 	}
 	
 	public Date getTimestamp() {
@@ -104,5 +94,21 @@ public class Alert {
 	
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public Double getRates() {
+		if(rates.size() == 0)
+			return 0.0;
+		
+		Double sum = 0.0;
+		for (Rate r : rates){
+			sum += r.getValue();
+		}
+		
+		return sum/(double)rates.size();
+	}
+
+	public void setRate(String email, Integer value) {
+		this.rates.add(new Rate(email, value));
 	}
 }

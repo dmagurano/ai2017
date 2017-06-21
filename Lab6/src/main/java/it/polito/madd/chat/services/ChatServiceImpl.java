@@ -6,15 +6,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import it.polito.madd.chat.model.ChatMessage;
-import it.polito.madd.chat.model.ChatValuation;
+import it.polito.madd.chat.model.ChatRate;
 import it.polito.madd.chat.model.Roster;
 import it.polito.madd.chat.model.UserDirectory;
 import it.polito.madd.entities.Alert;
 import it.polito.madd.entities.Message;
+import it.polito.madd.entities.Rate;
 import it.polito.madd.repositories.AlertRepository;
 import it.polito.madd.repositories.MessageRepository;
 
@@ -60,37 +65,41 @@ public class ChatServiceImpl implements ChatService {
 			alertRepository.save(alert);
 
 			messagingTemplate.convertAndSend(alertTopic, alert);
-		}  
+		}
 	    
 	    Message mess = new Message(msg.getMessage(), topic, msg.getUsername(), msg.getNickname(), msg.getDate());
+	    
+	    if (msg.getAlertId() != null)	// reference to existing alert
+	    	mess.setAlertId(msg.getAlertId());
+	    else if (alert != null)	// 	new alert
+	    	mess.setAlertId(alert.getId());
 	    
 	    messageRepo.save(mess);
 	    
 	    messagingTemplate.convertAndSend(chatMessagesList, msg);
 	}
 	
-	public void sendValuation (ChatValuation chatValuation) {
-		String ratesList = "/topic/rates/";
+	public void sendRate (ChatRate chatRate) {
+		String ratesList = "/topic/chat/rates/";
 		
 		// TODO
 		// update valuation in alert
 		// https://stackoverflow.com/questions/14527980/can-you-specify-a-key-for-addtoset-in-mongo
 		
-		/*
-		Alert alert = msg.extractAlert();
-		
-		if (alert != null){
-			alertRepository.save(alert);
+		Rate rate = new Rate(chatRate.getUsername(), chatRate.getValue());
 
-			messagingTemplate.convertAndSend(alertTopic, alert);
-		}  
-	    
-	    Message mess = new Message(msg.getMessage(), topic, msg.getUsername(), msg.getNickname(), msg.getDate());
-	    
-	    messageRepo.save(mess);
-	    
-	    messagingTemplate.convertAndSend(chatMessagesList, msg);
-	    */
+		/*
+		Query query = new Query();
+		query.addCriteria(Criteria.where("id").is(chatRate.getAlertId()));
+		
+		Update update = new Update();
+		update.addToSet("rates", rate);
+
+		alertRepository.findAndModify(query, update, FindAndModifyOptions.options());
+		*/
+		// TODO
+		
+		alertRepository.updateUserRate(chatRate.getAlertId(), rate);
 	}
 	
 	public void retrieveLastMessages (String topic, String user) {

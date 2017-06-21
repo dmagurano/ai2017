@@ -1,7 +1,9 @@
 var stompClient = null;
 var whoami = null;
 var alert = {};
-var types = ['cantiere', 'incidente', 'incendio', 'altro', 'Davide, we are watching you']
+var types = ['cantiere', 'incidente', 'incendio', 'altro', 'Davide, we are watching you'];
+var alerts = [];
+var reference = false;
 
 /* map */
 //initializing map
@@ -68,27 +70,56 @@ stompClient.connect({}, function (frame) {
 
 function sendMessage(msg) {
 	// extract text msg, lat, lng, type from msg
-	min_lat = 45.00;
-	max_lat = 45.11;
-	min_lng = 7.59;
-	max_lng = 7.75;
-	
-	lat = (Math.random() * (max_lat - min_lat) + min_lat).toFixed(4);
-	lng = (Math.random() * (max_lng - min_lng) + min_lng).toFixed(4);
-	
 	console.log("sending ", alert);
+	
+	var messageToServer;
+	
+	if (reference === false){// new alert
+		messageToServer = JSON.stringify({
+			'message': msg, 
+			'lat': alert.lat,
+			'lng': alert.lng,
+			'address': alert.address,
+			'type':alert.type
+		})
+	}
+	else{
+		messageToServer = JSON.stringify({
+			'message': msg, 
+			'alertId': alert.id
+		})
+	}
 	
 	stompClient.send( 
 			"/app/chat", 
 			{},
-			JSON.stringify({
-				'message': msg, 
-				'lat': alert.lat,
-				'lng': alert.lng,
-				'address': alert.address,
-				'type':alert.type
-			})
+			messageToServer
 	);
+	
+	alert = {};
+	reference = false;
+	
+	 $("#textArea").val('');
+	 $("#textArea").focus();
+}
+
+function sendRate(rate) {
+	console.log("sending ", rate);
+	
+	var messageToServer;
+	messageToServer = JSON.stringify({
+		'alertId': rate.alertId, 
+		'value': rate.value
+	});
+
+	stompClient.send(
+			"/app/rate", 
+			{},
+			messageToServer
+	);
+	
+	alert = {};
+	reference = false;
 	
 	 $("#textArea").val('');
 	 $("#textArea").focus();
@@ -103,7 +134,6 @@ function processMessage(mess) {
 }
 
 function processAlert(alert) {
-	// TODO uptade map with alert
 	console.log("new alert received");
 	console.log(alert);
 	
@@ -164,53 +194,60 @@ function processAlert(alert) {
 			loadPopup(alert)
 	);
 
-	
+	alerts[alert.id] = alert;
 }
 
 function loadPopup(alert){
-	return "<b>" + alert.type.toUpperCase() + "</b><br>"
+	return "<b>" + alert.type.toUpperCase() + "</b>"
+			+ " <button onclick=\"referToAlert(\'" + alert.id + "\')\" >cita</button><br>"
 			+ alert.address + "<br>"
 			+ "attivo dal " + printDateTime(alert.timestamp) + "<br>"
 			+ "segnalato da " + alert.nickname + "<br>"
-			+ "valutazione"
-			+ "	<div id=\"rating-out-" + alert.id + "\" class=\"acidjs-rating-stars acidjs-rating-disabled\">"
-			+ "			<input type=\"hidden\" name=\"alert-id\">"
-			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-0\" value=\"5\" />"
-			+ "			<label for=\"group-2-0\"></label>"
-			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-1\" value=\"4\" />"
-			+ "			<label for=\"group-2-1\"></label>"
-			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-2\" value=\"3\" checked=\"checked\"/>"
-			+ "			<label for=\"group-2-2\"></label>"
-			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-3\" value=\"2\" />"
-			+ "			<label for=\"group-2-3\"></label>"
-			+ "			<input disabled=\"disabled\" type=\"radio\" name=\"group-2\" id=\"group-2-4\"  value=\"1\" />"
-			+ "			<label for=\"group-2-4\"></label>"
-			+ "	</div><br>"
-			+ " <button onclick=\"enableRating(\'" + alert.id + "\')\" id=\"rating-button-" + alert.id + "\" >vota</button>"
-			+ "	<div id=\"rating-in-" + alert.id + "\" class=\"acidjs-rating-stars hidden-rating\">"
-			+ "			<input type=\"hidden\" name=\"alert-id\">"
-			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-0\" value=\"5\" />"
-			+ "			<label for=\"group-2-0\"></label>"
-			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-1\" value=\"4\" />"
-			+ "			<label for=\"group-2-1\"></label>"
-			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-2\" value=\"3\" checked=\"checked\"/>"
-			+ "			<label for=\"group-2-2\"></label>"
-			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-3\" value=\"2\" />"
-			+ "			<label for=\"group-2-3\"></label>"
-			+ "			<input type=\"radio\" name=\"group-2\" id=\"group-2-4\"  value=\"1\" />"
-			+ "			<label for=\"group-2-4\"></label>"
-			+ "			<button onclick=\"submitRating(\'" + alert.id + "\')\">invia</button>"
+			+ "valutazione " + alert.rates
+			+ "	<div class=\"stars\" id=\"rating-in-" + alert.id + "\">"
+			+ "	<form action=\"\">"
+			+ "			<input class=\"star star-5\" id=\"star-5\" type=\"radio\" name=\"star\" value=\"5\" onclick=\"submitRating(this, '" + alert.id + "\')\"/>"
+			+ "			<label class=\"star star-5\" for=\"star-5\"></label>"
+			+ "			<input class=\"star star-4\" id=\"star-4\" type=\"radio\" name=\"star\" value=\"4\" onclick=\"submitRating(this, '" + alert.id + "\')\"/>"
+			+ "			<label class=\"star star-4\" for=\"star-4\"></label>"
+			+ "			<input class=\"star star-3\" id=\"star-3\" type=\"radio\" name=\"star\" value=\"3\" onclick=\"submitRating(this, '" + alert.id + "\')\"/>"
+			+ "			<label class=\"star star-3\" for=\"star-3\"></label>"
+			+ "			<input class=\"star star-2\" id=\"star-2\" type=\"radio\" name=\"star\" value=\"2\" onclick=\"submitRating(this, '" + alert.id + "\')\"/>"
+			+ "			<label class=\"star star-2\" for=\"star-2\"></label>"
+			+ "			<input class=\"star star-1\" id=\"star-1\" type=\"radio\" name=\"star\" value=\"1\" onclick=\"submitRating(this, '" + alert.id + "\')\"/>"
+			+ "			<label class=\"star star-1\" for=\"star-1\"></label>"
+			+ "		</form>"
 			+ "	</div><br>";
 }
 
 function enableRating(alertId){
 	$("#rating-in-"+ alertId).show();
+	$("#rating-out-"+ alertId).hide();
 	$("#rating-button-"+ alertId).hide();
 }
 
-function submitRating(alertId){
-	// TODO
-	// send rate and update all rates
+function submitRating(checkedRadio, alertId){
+	var checkedValue = checkedRadio.value;
+	console.log(alertId);
+	console.log(checkedValue);
+	
+	var rate = {};
+	rate.alertId = alertId;
+	rate.value = parseInt(checkedValue);
+	
+	sendRate(rate);
+}
+
+function referToAlert(alertId){
+	alert = alerts[alertId];
+	
+	console.log("reference to\n", alert);
+	
+	searchCompleted = true;
+	
+	document.getElementById("textArea").value += "[" + alert.address + "]";
+	
+	reference = true;
 }
 
 function printDateTime(timestamp){

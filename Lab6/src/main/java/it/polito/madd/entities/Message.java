@@ -22,6 +22,8 @@ public class Message {
 	private String nickname;
 	
 	private Date timestamp;
+	
+	private String alertId;
 
 
 	public Message() {
@@ -63,36 +65,31 @@ public class Message {
 		return timestamp;
 	}
 
-
-
 	public void setText(String text) {
 		this.text = text;
 	}
-
-
 
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
 
-
-
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-
-
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
 
-
-
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
-	
-	
-	
+
+	public String getAlertId() {
+		return alertId;
+	}
+
+	public void setAlertId(String alertId) {
+		this.alertId = alertId;
+	}
 }

@@ -14,7 +14,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import it.polito.madd.chat.model.ChatMessage;
 import it.polito.madd.chat.model.ChatUser;
-import it.polito.madd.chat.model.ChatValuation;
+import it.polito.madd.chat.model.ChatRate;
 import it.polito.madd.chat.model.JoinMessage;
 import it.polito.madd.chat.model.UserDirectory;
 import it.polito.madd.chat.services.ChatService;
@@ -82,15 +82,14 @@ public class ChatController implements ApplicationListener<ApplicationEvent> {
 	  //@SendTo("/topic/chat")
 	  public void rateAlert(
 			  MessageHeaders hs, 						
-			  ChatValuation chatValuation) {
+			  ChatRate chatRate) {
 		  
 	    String sessionId=(String)hs.get("simpSessionId");
 	    ChatUser u = users.getUser(sessionId);
 	      
-	    // TODO
-	    // use ChatServiceImpl.sendValuation()
+	    chatRate.setUsername(u.getEmail());
 	    
-	    //chatService.sendMessage(users.getUser(sessionId).getTopicname(), chatMessage);
+	    chatService.sendRate(chatRate);
 	  }
 	
 	  

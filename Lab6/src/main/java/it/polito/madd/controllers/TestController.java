@@ -92,7 +92,10 @@ public class TestController {
 //    	test.setPassword("ads");
 //    	test.setPasswordConfirm("ads");
 //    	test.setPubTransport("daily");
-//    	
+    	
+//    	if (currentUser.getImage().length == 0)
+//    		currentUser.setImage(null);
+    		
     	model.addAttribute("user", currentUser);
         return "profile";
     }

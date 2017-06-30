@@ -109,6 +109,16 @@ public class Alert {
 	}
 
 	public void setRate(String email, Integer value) {
+		for (int i = 0; i < rates.size(); i++){
+			Rate rate = rates.get(i);
+			
+			if (rate.getEmail().equals(email)){
+				rate.setValue(value);
+				rates.set(i, rate);
+				return;
+			}
+		}
+		
 		this.rates.add(new Rate(email, value));
 	}
 }

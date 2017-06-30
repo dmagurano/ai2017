@@ -20,8 +20,15 @@
 			<!--     </th:block> -->
 			    <legend th:text="'Hi ' + ${user.nickname} + ', this is your profile page'"></legend>
 			    
-			    <th:block th:if="${user.getImage() != null}">
+			    <th:block th:if="${user.getImage().length != 0}">
 			    	<img th:src="@{'data:image/*;base64,'+${user.generateBase64Image()}}" style="width: 150px; height: 150px;"/>
+			    </th:block>
+			    
+			    <th:block th:if="${user.getImage().length == 0}">
+			    	<img 
+				    	src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlQiU1yEonftm27j6_3hYC69EMvxwuFQrTJ1cgIFJMwF4tyCnG" 
+				    	style="width: 150px; height: 150px;"
+			    	/>
 			    </th:block>
 			    <!-- TODO load default profile picture -->
 			    

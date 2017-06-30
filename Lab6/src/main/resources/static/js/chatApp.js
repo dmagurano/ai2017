@@ -283,6 +283,10 @@ function updateUsers (user) {
 
 function newRecvMessage (msg,date) {
 	var time = isToday(date) ? date.toLocaleTimeString() : date.toLocaleString();
+	
+	msg.message = msg.message.replace("[", "<span class=\"label label-info\">");
+	msg.message = msg.message.replace("]", "</span>");
+	
 	$("#chatMessages").append('<li class="left clearfix"><span class="chat-img1 pull-left"><img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/128/User-blue-icon.png" alt="User Avatar" class="img-circle"/></span>'+
 								'<div class="chat-nickname">'+
 								msg.nickname+
@@ -295,6 +299,10 @@ function newRecvMessage (msg,date) {
 
 function newSentMessage (msg,date) {
 	var time = isToday(date) ? date.toLocaleTimeString() : date.toLocaleString();
+	
+	msg.message = msg.message.replace("[", "<span class=\"label label-info\">");
+	msg.message = msg.message.replace("]", "</span>");
+	
 	$("#chatMessages").append('<li class="left clearfix admin_chat"><span class="chat-img1 pull-right"><img src="https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/995179_496393017119212_1942402182_n.jpg?oh=931db49c4f4f7c905efde31e3371f592&oe=59E4426F" alt="User Avatar" class="img-circle"/></span><div class="chat-body2 clearfix"><p>'+
 								msg.message+
 								'</p><div class="chat_time pull-left">'+time+'</div></div></li>');
@@ -349,14 +357,24 @@ var searchCompleted = false;
 $("#textArea").bind(
 		'input propertychange', 
 		function(){
-			if(searchCompleted != false)
-				return;
+			var textArea = this;
 				
-			tmp_string = this.value;
+			var tmp_string = textArea.value;
+			
+			if(searchCompleted != false){
+				if (tmp_string.indexOf("[") !== -1 
+						&& tmp_string.indexOf("]")  !== -1 )
+					return;
+				else{
+					searchCompleted = false;
+					alert = {};
+				}
+			}
 			
 			var matches = tmp_string.match(/\[(.*?)\]/);
 
 			if (matches) {
+				// TODO check if result contains proper data (eg. Turin)
 			    var location = matches[1];
 			    
 			    if (location){
@@ -366,18 +384,32 @@ $("#textArea").bind(
 				    	function(data) {
 				    		console.log(data);
 				    		searchCompleted = true;
+				    		
+				    		if (data.length === 0){
+				    			window.alert("Street not found.");
+				    			searchCompleted = false;
+				    		}
+
 				    		// search 'Turin' in data
 				    		var turinResult;
+				    		
 				    		for(var i in data){
 				    			if ((data[i].display_name.indexOf('Torino') !== -1) || (data[i].display_name.indexOf('Turin') !== -1)){
 				    				turinResult = data[i];
 				    				break;
 				    			}
+				    			else{
+				    				window.alert("Street not found.");
+				    			}
 				    		}
+				    		
 				        	//parse data from JSON
 				    		alert.lat = turinResult.lat;
 				    		alert.lng = turinResult.lon;
 				    		alert.address = turinResult.display_name;
+				    		
+				    		// update text area with alert.address
+				    		textArea.value = tmp_string.replace(/\[.*?\]/g, "[" + alert.address + "]");
 				    		
 				    		// TODO add popup for type selection
 				    		$('#alertsModal').modal({

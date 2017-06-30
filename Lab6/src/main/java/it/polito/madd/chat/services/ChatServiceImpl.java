@@ -82,22 +82,7 @@ public class ChatServiceImpl implements ChatService {
 	public void sendRate (ChatRate chatRate) {
 		String ratesList = "/topic/chat/rates/";
 		
-		// TODO
-		// update valuation in alert
-		// https://stackoverflow.com/questions/14527980/can-you-specify-a-key-for-addtoset-in-mongo
-		
 		Rate rate = new Rate(chatRate.getUsername(), chatRate.getValue());
-
-		/*
-		Query query = new Query();
-		query.addCriteria(Criteria.where("id").is(chatRate.getAlertId()));
-		
-		Update update = new Update();
-		update.addToSet("rates", rate);
-
-		alertRepository.findAndModify(query, update, FindAndModifyOptions.options());
-		*/
-		// TODO
 		
 		alertRepository.updateUserRate(chatRate.getAlertId(), rate);
 	}

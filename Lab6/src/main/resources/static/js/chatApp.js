@@ -201,7 +201,7 @@ function loadPopup(alert){
 	return "<b>" + alert.type.toUpperCase() + "</b>"
 			+ " <button onclick=\"referToAlert(\'" + alert.id + "\')\" >cita</button><br>"
 			+ alert.address + "<br>"
-			+ "attivo dal " + printDateTime(alert.timestamp) + "<br>"
+			+ "attivo dal " + printDateTime(alert.recvTimestamp) + "<br>"
 			+ "segnalato da " + alert.nickname + "<br>"
 			+ "valutazione " + alert.rates
 			+ "	<div class=\"stars\" id=\"rating-in-" + alert.id + "\">"
@@ -399,7 +399,7 @@ $("#textArea").bind(
 				    				break;
 				    			}
 				    			else{
-				    				window.alert("Street not found.");
+				    				console.log("Street not found.");
 				    			}
 				    		}
 				    		

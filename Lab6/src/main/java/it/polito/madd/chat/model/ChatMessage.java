@@ -39,10 +39,15 @@ public class ChatMessage {
 		}
 		
 		public Alert extractAlert() {
+			if (alertId != null && type == null)
+				//reference to existing alert
+				return new Alert(alertId,date);
 			if (lat == null || lng == null || type == null || address == null)
+				//no alert
 				return null;
 			else
-				return new Alert(lat,lng,address,date,username,nickname,type);
+				//new alert
+				return new Alert(lat,lng,address,date,date,username,nickname,type);
 		}
 
 		public Double getLat() {

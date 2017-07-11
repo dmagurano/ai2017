@@ -2,10 +2,13 @@ package it.polito.madd.chat.services;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -37,7 +40,9 @@ public class ChatServiceImpl implements ChatService {
 	
 	@Autowired
 	private AlertRepository alertRepository;
-	  
+	
+	@Value("#{'${alerts.expireAfter.seconds}'}")
+	private Integer expireAfter;
 	
 	public void updateUsersList (String topic){
 		
@@ -58,13 +63,18 @@ public class ChatServiceImpl implements ChatService {
 		String chatMessagesList = "/topic/chat/"+ topic;
 		String alertTopic = "/topic/chat/alerts";
 		
-	    // TODO purge alert from message
 		Alert alert = msg.extractAlert();
 		
 		if (alert != null){
-			alertRepository.save(alert);
-
-			messagingTemplate.convertAndSend(alertTopic, alert);
+			if (alert.getId() == null)
+			{
+				// new alert
+				alertRepository.save(alert);
+				messagingTemplate.convertAndSend(alertTopic, alert);
+			}
+			else
+				// update alert ref
+				alertRepository.updateReferenceTs(alert.getId(), alert.getLastAccessTimestamp());	
 		}
 	    
 	    Message mess = new Message(msg.getMessage(), topic, msg.getUsername(), msg.getNickname(), msg.getDate());
@@ -92,15 +102,6 @@ public class ChatServiceImpl implements ChatService {
 		List<Message> msgs= new ArrayList<Message>();
 		msgs = messageRepo.findTop10ByTopicOrderByTimestampDesc(topic);
 		
-//		List<StaffPublic> result = staff.stream().map(temp -> {
-//            StaffPublic obj = new StaffPublic();
-//            obj.setName(temp.getName());
-//            obj.setAge(temp.getAge());
-//            if ("mkyong".equals(temp.getName())) {
-//                obj.setExtra("this field is for mkyong only!");
-//            }
-//            return obj;
-//        }).collect(Collectors.toList());
 		Collections.reverse(msgs);
 		
 		List<ChatMessage> chmsgs = msgs.stream().map(m -> {
@@ -114,13 +115,6 @@ public class ChatServiceImpl implements ChatService {
 		
 		messagingTemplate.convertAndSendToUser(user, chatMessagesList, chmsgs);
 				
-//		// Generate an iterator. Start just after the last element.
-//		ListIterator<Message> li = msgs.listIterator(msgs.size());
-//		// Iterate in reverse.
-//		while(li.hasPrevious()) {
-//		  Message mess = li.previous();
-//		  messagingTemplate.convertAndSendToUser(user, chatMessagesList, new ChatMessage(mess.getUserEmail(), mess.getNickname(), mess.getText(), mess.getTimestamp()));
-//		}
 	}
     
 	
@@ -128,6 +122,27 @@ public class ChatServiceImpl implements ChatService {
 		String chatMessagesList = "/queue/alerts";
 		
 		List<Alert> alerts = alertRepository.findAll();
+		//check the last access time of every alert and remove the expired
+		Iterator<Alert> it = alerts.iterator();
+		while (it.hasNext()) {
+			Alert alert = it.next();
+			// calc the difference in minutes
+			Long minutesBetween = ((new Date()).getTime() - alert.getLastAccessTimestamp().getTime()) / (60 * 1000) % 60;
+			// TODO remove next comment
+			// optional: for debug purpose use the next line to get 5 seconds interval
+			//Long minutesBetween = ((new Date()).getTime() - alert.getLastAccessTimestamp().getTime()) / (1000) % 60;
+			if (minutesBetween > expireAfter)
+			{
+				// delete the item from db and then remove it from list
+				alertRepository.deleteAlertById(alert.getId());
+				it.remove();
+			}
+			else
+			{	// update the lastAccessTimestamp and sync to db
+				alert.setLastAccess();
+				alertRepository.save(alert);
+			}
+		}	
 		
 		messagingTemplate.convertAndSendToUser(user, chatMessagesList, alerts);
 	}

@@ -41,7 +41,7 @@ public class ChatServiceImpl implements ChatService {
 	@Autowired
 	private AlertRepository alertRepository;
 	
-	@Value("#{'${alerts.expireAfter.seconds}'}")
+	@Value("#{'${alerts.expireAfter.minutes}'}")
 	private Integer expireAfter;
 	
 	public void updateUsersList (String topic){

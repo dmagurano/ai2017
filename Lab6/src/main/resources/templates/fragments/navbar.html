@@ -12,9 +12,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" th:href="@{/}">Lab4</a>
+            <a class="navbar-brand" th:href="@{/}">CiqnueTi</a>
         </div>
+        
         <div class="navbar-collapse collapse row" sec:authorize="isAnonymous()" th:if="${showLogin} == null">
+        
             <div class="col-md-6 col-md-offset-4">
                 <form class="navbar-form navbar-right" role="form" method="POST" th:action="@{/login}">
                     <div class="form-group">
@@ -45,19 +47,19 @@
 <!--                         Sign Up -->
 <!--                     </a> -->
 <!--                 </li> -->
-				<li sec:authorize="isAuthenticated()">
-					<a href="/profile">
-						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-						<span th:text="'&nbsp;'+${#authentication.name}">&nbsp;User</span>
-					</a>
-				</li>
-                <li sec:authorize="isAuthenticated()">
-                    <a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
-                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
-                    </a>
-                    <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
-                </li>
-            </ul>
+			<li sec:authorize="isAuthenticated()">
+				<a href="/profile">
+					<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+					<span th:text="'&nbsp;'+${#authentication.name}">&nbsp;User</span>
+				</a>
+			</li>
+			<li sec:authorize="isAuthenticated()">
+				<a href="/logout" th:href="@{#}" onclick="$('#form').submit();">
+					<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+				</a>
+				<form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
+			</li>
+		</ul>
 
     </div>
 </div>
